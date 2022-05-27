@@ -37,7 +37,7 @@
                 android:autofillHints="emailAddress"
                 android:hint="https://www."
                 android:inputType="textEmailAddress"
-                android:text="https://www.orf.at" />
+                android:text="https://de.langenscheidt.com/deutsch-arabisch" />
 
             <ImageButton
                 android:id="@+id/button"

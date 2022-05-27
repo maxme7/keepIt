@@ -1,21 +1,21 @@
 package com.example.keepit
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var webView: WebView
@@ -29,45 +29,13 @@ class MainActivity : AppCompatActivity() {
 
 
         //setup
-//        webViewClient = WebViewClient()
         webView = findViewById(R.id.webView) //view binding?
         button = findViewById(R.id.button)
         editText = findViewById(R.id.editText)
 
-        //not needed currently; if page could be laoded successfully
-        //https://stackoverflow.com/questions/28385768/android-how-to-check-for-successful-load-of-url-when-using-webview-loadurl
-        var failedLoading = false
-        webView.webViewClient = object : WebViewClient() {
-            override fun onPageFinished(view: WebView, url: String) {
-                super.onPageFinished(view, url)
-                if (!failedLoading) {
-                    Snackbar.make(
-                        findViewById(R.id.coordinatorLayout),
-                        "page finished loading",
-                        1000
-                    ).show()
-                    editText.setText(webView.url.toString())
-                }
+        webView.webViewClient = CustomWebViewClient()
+        webView.loadUrl("https://de.langenscheidt.com/deutsch-arabisch/machen")
 
-                //apply javascript
-                //https://stackoverflow.com/questions/19621427/webview-manipulate-dom-after-webpage-has-been-loaded
-//                view.loadUrl("javascript:document.body.setAttribute(\"hidden\", true)")
-
-                //including local js and css
-                view.loadUrl("javascript:document.head.innerHTML += \"<link href='file:///android_asset/script.js' rel='stylesheet'>\"")
-
-//                view.loadDataWithBaseURL()
-            }
-
-            override fun onReceivedError(
-                view: WebView,
-                request: WebResourceRequest,
-                error: WebResourceError
-            ) {
-                super.onReceivedError(view, request, error)
-                failedLoading = true
-            }
-        }
 
         //browser settings
         //https://stackoverflow.com/questions/8298237/video-not-appearing-on-a-webview
@@ -77,9 +45,11 @@ class MainActivity : AppCompatActivity() {
         settings.setSupportMultipleWindows(false)
         settings.setSupportZoom(true)
         settings.allowFileAccess = true
+        settings.loadWithOverviewMode = true
 
         webView.isVerticalScrollBarEnabled = false
         webView.isHorizontalScrollBarEnabled = false
+        WebView.setWebContentsDebuggingEnabled(true)
 
         //search button
         button.setOnClickListener {

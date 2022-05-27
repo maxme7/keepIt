@@ -5,6 +5,13 @@ import android.webkit.*
 import android.widget.EditText
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import java.io.File
+import java.io.IOException
+import java.io.InputStream
 
 class CustomWebViewClient : WebViewClient() {
     var failedLoading = false
@@ -84,7 +91,8 @@ class CustomWebViewClient : WebViewClient() {
 
 
         }
-//        let el = document.querySelectorAll(".lemma-group .lemma-entry .col1 .lemma-pieces")
+
+        //        let el = document.querySelectorAll(".lemma-group .lemma-entry .col1 .lemma-pieces")
 //        for(let e of el){
 //            let b = document.createElement("span")
 //            b.textContent="https://www.reshot.com/preview-assets/icons/GC6DYT5UXL/star-GC6DYT5UXL.svg";
@@ -93,7 +101,20 @@ class CustomWebViewClient : WebViewClient() {
 //            b.height="20"
 //            e.appendChild(b)
 //        }
-        addStars()
+//        addStars()
+
+//        view.loadUrl("file:///android_asset/addStars.js")
+//          view.loadUrl("javascript: document.body.innerHTML += \"<script type=\\\"text/javascript\\\" src=\\\"addStars.js\\\"/>\";")
+
+
+        Log.i("FILE",  fetchAssetFile(view, "addStars.js"))
+
+//        GlobalScope.launch(Dispatchers.IO) { //not working; all webview methods must be called on the same thread
+//            val file = async { fetchAssetFile(view, "addStars.js") }
+//            view.evaluateJavascript(file.await(), null)
+//        }
+
+        view.evaluateJavascript(fetchAssetFile(view, "addStars.js"), null)
 
 //        view.loadUrl("file:///android_asset/star.svg")
 
@@ -111,5 +132,32 @@ class CustomWebViewClient : WebViewClient() {
 
 }
 
+
+/**
+ *  fileName - relative file name from the file:///android_asset/
+ *  returns whole file
+ */
+fun fetchAssetFile(view: WebView, fileName: String): String {
+    var file: String = "" //TODO should empty string be returned by default?
+    var inputStream: InputStream? = null
+
+    try {
+        inputStream = view.resources.assets.open(fileName)
+        val buffer = ByteArray(inputStream.available())
+        inputStream.read(buffer)
+        file = String(buffer)
+    } catch (e: IOException) {
+        e.printStackTrace()
+    } finally {
+        inputStream?.close()
+    }
+
+    return file
+}
+
 // shouldInterceptRequest: https://stackoverflow.com/questions/24547446/android-block-ads-in-webview
 // block requests: https://joshuatz.com/posts/2021/webview-intercepting-and-blocking-requests/
+
+// read file from assets: https://www.tutorialspoint.com/how-to-read-a-file-from-assets-on-android
+// read files: https://www.baeldung.com/kotlin/read-file
+// async: https://www.youtube.com/watch?v=t-3TOke8tq8

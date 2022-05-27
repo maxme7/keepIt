@@ -18,7 +18,7 @@ class CustomWebViewClient : WebViewClient() {
 
     override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
 
-        //Currently only for langenscheidt; filters cookies and add banner
+        //Currently only for langenscheidt; filters cookies and add banner TODO
         if (request?.url.toString().contains("langenscheidt") || request?.url.toString().contains("cloudfront") || request?.url.toString()
                 .contains("svg")
         ) {
@@ -45,80 +45,15 @@ class CustomWebViewClient : WebViewClient() {
 
         //apply javascript
         //https://stackoverflow.com/questions/19621427/webview-manipulate-dom-after-webpage-has-been-loaded
-//                view.loadUrl("javascript:document.body.setAttribute(\"hidden\", true)")
 
 
-        //https://stackoverflow.com/questions/39831360/webview-detect-button-click-event
-        //https://www.youtube.com/watch?v=9RwJeocTgJg
-        view.addJavascriptInterface(object : Any() {
-            @JavascriptInterface @Throws(Exception::class)
-            fun performClick(s: String) {
-                Toast.makeText(view.context, s, Toast.LENGTH_LONG).show()
-            }
-        }, "enter")
-        //enter refers to the global window object which has a method PerformClick() that can be invoked
-        //WERBUNG !!! weg!
 
         //=> https://developer.android.com/reference/android/webkit/WebView#addJavascriptInterface(java.lang.Object,%20java.lang.String)
         //next reloaded; security implication; injects java object
 
-
-        //including local js and css
-        fun sdf() {
-            view.loadUrl("javascript:console.log(\"hello\");\n" +
-                    "setTimeout(function(){if(document.querySelector(\"#onetrust-pc-btn-handler\")) document.querySelector(\"#onetrust-pc-btn-handler\").click()}, 0);\n" +
-                    "setTimeout(function(){if(document.querySelector(\".save-preference-btn-handler\")) document.querySelector(\".save-preference-btn-handler\").click()}, 0);\n" +
-                    "document.getElementById('search-string').addEventListener('keydown', ()=>enter.performClick('pass some string value'));")
-        }
-//        sdf()
-        //directly pasing script works. including a js file or alternatively loading file content and passing that to .loadUrl might be trickier
-        //view.loadUrl("javascript:document.head.innerHTML += \"<script src='file:///android_asset/script.js' type='text/javascript' defer/>\"")
-
-        //SEMI COLONS IMPORTANT !!
-
-        fun addStars() {
-            view.loadUrl(("javascript:" +
-                    "let el = document.querySelectorAll(\".lemma-group .lemma-entry .col1 .lemma-pieces\");\n" +
-                    "for(let e of el){\n" +
-                    "let b = document.createElement(\"img\");\n" +
-                    "b.src=\"https://www.reshot.com/preview-assets/icons/GC6DYT5UXL/star-GC6DYT5UXL.svg\";\n" +
-                    "b.classList.add(\"text-to-speech\");\n" +
-                    "b.width=\"20\";\n" +
-                    "b.height=\"20\";\n" +
-                    "e.appendChild(b);\n" +
-                    "}" +
-                    "").trimMargin().trimIndent())
-
-
-        }
-
-        //        let el = document.querySelectorAll(".lemma-group .lemma-entry .col1 .lemma-pieces")
-//        for(let e of el){
-//            let b = document.createElement("span")
-//            b.textContent="https://www.reshot.com/preview-assets/icons/GC6DYT5UXL/star-GC6DYT5UXL.svg";
-//            b.classList.add("text-to-speech")
-//            b.width="20"
-//            b.height="20"
-//            e.appendChild(b)
-//        }
-//        addStars()
-
-//        view.loadUrl("file:///android_asset/addStars.js")
-//          view.loadUrl("javascript: document.body.innerHTML += \"<script type=\\\"text/javascript\\\" src=\\\"addStars.js\\\"/>\";")
-
-
-        Log.i("FILE",  fetchAssetFile(view, "addStars.js"))
-
-//        GlobalScope.launch(Dispatchers.IO) { //not working; all webview methods must be called on the same thread
-//            val file = async { fetchAssetFile(view, "addStars.js") }
-//            view.evaluateJavascript(file.await(), null)
-//        }
-
+//        view.loadUrl("javascript: " + fetchAssetFile(view, "addStars.js"))
         view.evaluateJavascript(fetchAssetFile(view, "addStars.js"), null)
 
-//        view.loadUrl("file:///android_asset/star.svg")
-
-        //view.loadDataWithBaseURL()
     }
 
     override fun onReceivedError(

@@ -43,9 +43,11 @@ class MainActivity : AppCompatActivity() {
         settings.javaScriptEnabled = true
         settings.javaScriptCanOpenWindowsAutomatically = false
         settings.setSupportMultipleWindows(false)
-        settings.setSupportZoom(true)
         settings.allowFileAccess = true
         settings.loadWithOverviewMode = true
+        settings.setSupportZoom(true)
+        settings.builtInZoomControls = true
+        settings.displayZoomControls = false
 
         webView.isVerticalScrollBarEnabled = false
         webView.isHorizontalScrollBarEnabled = false
@@ -58,6 +60,28 @@ class MainActivity : AppCompatActivity() {
             webView.loadUrl(editText.text.toString())
             webView
         }
+
+        //TODO InjectionObject
+        val fielde = "hey"
+
+        //https://stackoverflow.com/questions/39831360/webview-detect-button-click-event
+        //https://www.youtube.com/watch?v=9RwJeocTgJg
+        //TODO outsource InterfaceClass
+        webView.addJavascriptInterface(object : Any() {
+
+            @JavascriptInterface @Throws(Exception::class)
+            fun getField(): String {
+                return fielde
+            }
+
+            @JavascriptInterface @Throws(Exception::class)
+            fun performClick(s: String) {
+                Toast.makeText(applicationContext, s, Toast.LENGTH_LONG).show()
+            }
+
+        }, "enter")
+        //enter refers to the global window object which has a method PerformClick() that can be invoked
+
 
         //search on enter key
         //https://stackoverflow.com/questions/31378621/keylistener-on-edittext-android

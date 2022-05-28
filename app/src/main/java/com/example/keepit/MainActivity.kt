@@ -4,17 +4,17 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.webkit.*
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
@@ -61,26 +61,12 @@ class MainActivity : AppCompatActivity() {
             webView
         }
 
-        //TODO InjectionObject
-        val fielde = "hey"
-
         //https://stackoverflow.com/questions/39831360/webview-detect-button-click-event
         //https://www.youtube.com/watch?v=9RwJeocTgJg
-        //TODO outsource InterfaceClass
-        webView.addJavascriptInterface(object : Any() {
 
-            @JavascriptInterface @Throws(Exception::class)
-            fun getField(): String {
-                return fielde
-            }
-
-            @JavascriptInterface @Throws(Exception::class)
-            fun performClick(s: String) {
-                Toast.makeText(applicationContext, s, Toast.LENGTH_LONG).show()
-            }
-
-        }, "enter")
-        //enter refers to the global window object which has a method PerformClick() that can be invoked
+        val injectionObject = InjectionObject()
+        webView.addJavascriptInterface(CustomJavascriptInterface(applicationContext, injectionObject), "android") //TODO companion object in jsInterface?
+        //second parameter refers to the global window object which has a method PerformClick() that can be invoked
 
 
         //search on enter key

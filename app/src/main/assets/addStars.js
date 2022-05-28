@@ -9,6 +9,12 @@ for(let e of entries){
 //    b.classList.add("text-to-speech"); //problem when screen size too small
     i.width="20";
     i.height="20";
-    i.addEventListener('click', () => enter.performClick(e.querySelector(textContentSelector).textContent));
+
+    let injectionObject = JSON.parse(android.getInjectionObject());
+    i.addEventListener('click', () => {
+        android.performClick(injectionObject.field);
+        android.addEntry("somestring");
+    });
+//    i.addEventListener('click', () => android.performClick(e.querySelector(textContentSelector).textContent));
     e.appendChild(i);
 }

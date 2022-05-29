@@ -1,26 +1,33 @@
 package com.example.keepit
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.webkit.*
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
 import kotlin.collections.ArrayList
 
+private const val defaultUrl: String = "https://de.langenscheidt.com/deutsch-arabisch/gehen"
+//private const val defaultUrl: String = "https://de.langenscheidt.com/deutsch-englisch/bow"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var webView: WebView
     private lateinit var button: ImageButton
     private lateinit var editText: EditText
+    private var url: String? = null
+    private var scrollY: Int = 0
 
     private val bookmarks: MutableList<String> = mutableListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,8 +41,10 @@ class MainActivity : AppCompatActivity() {
         editText = findViewById(R.id.editText)
 
         webView.webViewClient = CustomWebViewClient()
-        webView.loadUrl("https://de.langenscheidt.com/deutsch-arabisch/machen")
 
+
+        Log.i("WEB", url.toString())
+//        webView.loadUrl(url ?: "https://de.langenscheidt.com/deutsch-arabisch/gehen")
 
         //browser settings
         //https://stackoverflow.com/questions/8298237/video-not-appearing-on-a-webview
@@ -65,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         //https://www.youtube.com/watch?v=9RwJeocTgJg
 
         val injectionObject = InjectionObject()
-        webView.addJavascriptInterface(CustomJavascriptInterface(applicationContext, injectionObject), "android") //TODO companion object in jsInterface?
+        webView.addJavascriptInterface(CustomJavascriptInterface(webView, injectionObject), "android") //TODO companion object in jsInterface?
         //second parameter refers to the global window object which has a method PerformClick() that can be invoked
 
 
@@ -87,6 +96,14 @@ class MainActivity : AppCompatActivity() {
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         supportActionBar?.title = s
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        //load restored url after state change or default url
+        webView.loadUrl(url ?: defaultUrl)
+        webView.scrollTo(0,scrollY)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -135,4 +152,19 @@ class MainActivity : AppCompatActivity() {
 
         builder.create().show()
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("url", webView.url)
+        outState.putInt("scrollY", webView.scrollY) //not perfect, but better. different layouts do not match with scrollY TODO
+    }
+
+    // restored after onStart() and before onResume()
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        url = savedInstanceState.getString("url")
+        scrollY = savedInstanceState.getInt("scrollY")
+    }
 }
+
+// save in bundle: https://medium.com/@evanbishop/saving-state-through-the-bundle-when-you-rotate-the-screen-d913422fe4f6

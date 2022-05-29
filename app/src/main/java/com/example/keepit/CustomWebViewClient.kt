@@ -52,6 +52,7 @@ class CustomWebViewClient : WebViewClient() {
         //next reloaded; security implication; injects java object
 
 //        view.loadUrl("javascript: " + fetchAssetFile(view, "addStars.js"))
+        view.evaluateJavascript(fetchAssetFile(view, "playAudioDirectly.js"), null)
         view.evaluateJavascript(fetchAssetFile(view, "addStars.js"), null)
 
     }

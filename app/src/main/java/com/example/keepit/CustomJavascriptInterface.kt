@@ -3,12 +3,16 @@ package com.example.keepit
 import android.content.Context
 import android.util.Log
 import android.webkit.JavascriptInterface
+import android.webkit.WebView
 import android.widget.Toast
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
-class CustomJavascriptInterface(private val context: Context, private val injectionObject: InjectionObject ) {
+class CustomJavascriptInterface(private val webView: WebView, private val injectionObject: InjectionObject) {
 
     private val gson = Gson()
 
@@ -26,21 +30,31 @@ class CustomJavascriptInterface(private val context: Context, private val inject
     }
 
     @JavascriptInterface @Throws(Exception::class)
-    fun addEntry(sourceLang: String,targetLang: Language,sourceWord: String, targetWord: String): Boolean {
+    fun addEntry(url: String, sourceLang: String, targetLang: String, sourceWord: String, targetWord: String, gram: String?,
+                 phon: String?, ind: String?): Boolean {
 //        val injectionObject: ArrayList<DictionaryEntryData> = ArrayList()
 
-//        > fetch url (via view..)
-//        > parse enum from string
-//        > get fields from website and feed it to addEntry
+        Toast.makeText(webView.context, url, Toast.LENGTH_SHORT).show()
 
-        val entry = DictionaryEntryData("http://", Date(), Language.DE, Language.EN, "Kuh", "Cow", emptyArray())
+        val entry = DictionaryEntryData(
+            url,
+            Date(),
+            Language.valueOf(sourceLang.uppercase()),
+            Language.valueOf(targetLang.uppercase()),
+            sourceWord,
+            targetWord,
+            gram,
+            phon,
+            ind,
+            emptyArray()) //TODO categories (?)
+
         Log.i("ENTRY", entry.toString())
         return true
     }
 
     @JavascriptInterface @Throws(Exception::class)
     fun performClick(s: String) {
-        Toast.makeText(context, s, Toast.LENGTH_LONG).show()
+        Toast.makeText(webView.context, s, Toast.LENGTH_SHORT).show()
     }
 }
 

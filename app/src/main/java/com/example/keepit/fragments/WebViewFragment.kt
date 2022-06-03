@@ -1,4 +1,4 @@
-package com.example.keepit
+package com.example.keepit.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import com.example.keepit.webview.CustomJavascriptInterface
+import com.example.keepit.webview.CustomWebViewClient
+import com.example.keepit.webview.InjectionObject
+import com.example.keepit.R
 
 private const val defaultUrl: String = "https://de.langenscheidt.com/deutsch-arabisch/gehen"
 //private const val defaultUrl: String = "https://de.langenscheidt.com/deutsch-englisch/bow"

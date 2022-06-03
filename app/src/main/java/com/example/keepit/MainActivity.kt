@@ -1,33 +1,24 @@
 package com.example.keepit
 
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import android.util.Log
-import android.view.KeyEvent
 import android.view.Menu
-import android.view.MenuItem
-import android.webkit.*
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.room.Room
+import com.example.keepit.enums.Language
+import com.example.keepit.room.AppDatabase
+import com.example.keepit.room.Converters
+import com.example.keepit.room.DictEntry
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.runBlocking
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
@@ -50,14 +41,20 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
         drawerLayout = findViewById(R.id.drawer_layout)
         NavigationUI.setupWithNavController(findViewById<NavigationView>(R.id.navigationView), navController)
-
+//TODO outsource in own method(s)
         appBarConfig = AppBarConfiguration(navController.graph, drawerLayout)
         setupActionBarWithNavController(navController, appBarConfig)
 
-        destinationChangeListener = NavController.OnDestinationChangedListener{ controller, destination, arguments ->
+        destinationChangeListener = NavController.OnDestinationChangedListener { controller, destination, arguments ->
+
+
+            //test db
+
+            runBlocking {
+                databaseAccess()
+            }
 
         }
-
 
 
         //https://stackoverflow.com/questions/33698122/android-change-actionbar-title-text-color
@@ -71,6 +68,30 @@ class MainActivity : AppCompatActivity() {
 //        supportActionBar?.title = s
     }
 
+    private suspend fun databaseAccess() {
+        val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "dictentries").build()
+        val dictEntryDao = db.dictEntryDao()
+
+        dictEntryDao.deleteAll()
+        dictEntryDao.insertAll(
+            DictEntry("some.url", Date(), Language.AR, Language.DE, "Adam", "1st Street", null, null, null, arrayOf()),
+        )
+
+        val dictEntries: List<DictEntry> = dictEntryDao.getAll()
+        for (e in dictEntries) {
+            Log.i("Room",
+                "${e.url} ${e.date} ${e.sourceLang} ${e.targetLang} ${e.sourceWord} ${e.targetWord} ${e.gram} ${e.phon} ${e.ind} ${
+                    arrayToString(e.categories)
+                }")
+        }
+    }
+
+    fun arrayToString(array: Array<String>): String {
+        var string = "["
+        array.forEach { string += "$it," }
+        return string.substringBeforeLast(',') + "]"
+    }
+
     override fun onPause() {
         super.onPause()
         navController.removeOnDestinationChangedListener(destinationChangeListener)
@@ -81,7 +102,7 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener(destinationChangeListener)
     }
 
-    override fun onSupportNavigateUp() :Boolean{
+    override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp(appBarConfig) || super.onSupportNavigateUp()
     }
 
@@ -131,7 +152,6 @@ class MainActivity : AppCompatActivity() {
 //
 //        builder.create().show()
 //    }
-
 
 }
 

@@ -1,7 +1,8 @@
-package com.example.keepit
+package com.example.keepit.fragments
 
 import android.os.Bundle
 import androidx.preference.PreferenceFragmentCompat
+import com.example.keepit.R
 
 class SettingsFragment : PreferenceFragmentCompat() {
 

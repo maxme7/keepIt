@@ -1,16 +1,13 @@
-package com.example.keepit
+package com.example.keepit.webview
 
-import android.content.Context
 import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.widget.Toast
+import com.example.keepit.enums.Language
+import com.example.keepit.room.DictEntry
 import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
 
 class CustomJavascriptInterface(private val webView: WebView, private val injectionObject: InjectionObject) {
 
@@ -32,11 +29,11 @@ class CustomJavascriptInterface(private val webView: WebView, private val inject
     @JavascriptInterface @Throws(Exception::class)
     fun addEntry(url: String, sourceLang: String, targetLang: String, sourceWord: String, targetWord: String, gram: String?,
                  phon: String?, ind: String?): Boolean {
-//        val injectionObject: ArrayList<DictionaryEntryData> = ArrayList()
+//        val injectionObject: ArrayList<DictEntry> = ArrayList()
 
         Toast.makeText(webView.context, url, Toast.LENGTH_SHORT).show()
 
-        val entry = DictionaryEntryData(
+        val entry = DictEntry(
             url,
             Date(),
             Language.valueOf(sourceLang.uppercase()),

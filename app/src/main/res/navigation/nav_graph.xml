@@ -7,11 +7,11 @@
 
     <fragment
         android:id="@+id/webViewFragment"
-        android:name="com.example.keepit.WebViewFragment"
+        android:name="com.example.keepit.fragments.WebViewFragment"
         android:label="fragment_web_view"
         tools:layout="@layout/fragment_web_view" />
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.keepit.SettingsFragment"
+        android:name="com.example.keepit.fragments.SettingsFragment"
         android:label="SettingsFragment" />
 </navigation>

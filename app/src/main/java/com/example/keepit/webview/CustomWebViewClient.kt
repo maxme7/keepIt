@@ -1,15 +1,7 @@
-package com.example.keepit
+package com.example.keepit.webview
 
 import android.util.Log
 import android.webkit.*
-import android.widget.EditText
-import android.widget.Toast
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import java.io.File
 import java.io.IOException
 import java.io.InputStream
 

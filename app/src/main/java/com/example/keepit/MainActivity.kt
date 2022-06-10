@@ -3,6 +3,9 @@ package com.example.keepit
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
+import android.view.SubMenu
+import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
@@ -14,7 +17,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.room.Room
 import com.example.keepit.enums.Language
 import com.example.keepit.room.AppDatabase
-import com.example.keepit.room.Converters
 import com.example.keepit.room.DictEntry
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.runBlocking
@@ -26,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 //    private lateinit var editText: EditText
 
     private lateinit var navController: NavController
-    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var drawerLayoutParent: DrawerLayout
     private lateinit var appBarConfig: AppBarConfiguration
 
     private lateinit var destinationChangeListener: NavController.OnDestinationChangedListener
@@ -37,23 +39,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
-        navController = navHostFragment.navController
-        drawerLayout = findViewById(R.id.drawer_layout)
-        NavigationUI.setupWithNavController(findViewById<NavigationView>(R.id.navigationView), navController)
-//TODO outsource in own method(s)
-        appBarConfig = AppBarConfiguration(navController.graph, drawerLayout)
-        setupActionBarWithNavController(navController, appBarConfig)
+        val drawer = findViewById<NavigationView>(R.id.navigationView)
 
-        destinationChangeListener = NavController.OnDestinationChangedListener { controller, destination, arguments ->
+        setupDrawer()
 
+        //TODO tab switcher main view
 
-            //test db
-
-            runBlocking {
-                databaseAccess()
-            }
-
+        //test db:
+        runBlocking {
+            databaseAccess()
         }
 
 
@@ -66,6 +60,22 @@ class MainActivity : AppCompatActivity() {
 //            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
 //        )
 //        supportActionBar?.title = s
+    }
+
+    private fun setupDrawer() {
+        //TODO https://www.youtube.com/watch?v=zYVEMCiDcmY  make drawer nicer
+
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        navController = navHostFragment.navController
+        drawerLayoutParent = findViewById(R.id.drawer_layout)
+        NavigationUI.setupWithNavController(findViewById<NavigationView>(R.id.navigationView), navController)
+
+        appBarConfig = AppBarConfiguration(navController.graph, drawerLayoutParent)
+        setupActionBarWithNavController(navController, appBarConfig)
+
+        destinationChangeListener = NavController.OnDestinationChangedListener { controller, destination, arguments ->
+            //To be implemented
+        }
     }
 
     private suspend fun databaseAccess() {
@@ -107,8 +117,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.web_menu, menu);
-        return true;
+        menuInflater.inflate(R.menu.web_menu, menu)
+        return true
     }
 
     //https://developer.android.com/training/appbar/actions

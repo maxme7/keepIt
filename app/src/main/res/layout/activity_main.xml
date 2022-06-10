@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/drawer_manu"/>
+        app:menu="@menu/drawer_manu" />
 
     <!--    https://www.youtube.com/watch?v=DI0NIk-7cz8-->
     <!--    https://www.youtube.com/watch?v=pucQs0TUe0I-->

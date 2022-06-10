@@ -1,24 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
 
     <group>
         <item
             android:id="@+id/webViewFragment"
+            android:icon="@drawable/ic_langenscheidt"
             android:title="Langenscheidt" />
-        <item android:title="Yandex" />
-        <item android:title="Leo" />
-        <item android:title="arabdict" />
-        <item android:title="deepl" />
+        <item
+            android:icon="@drawable/ic_yandex"
+            android:title="Yandex" />
+        <item
+            android:icon="@drawable/ic_leo"
+            android:title="Leo" />
+        <item
+            android:icon="@drawable/arabdict"
+            android:title="arabdict" />
+        <item
+            android:icon="@drawable/ic_deepl"
+            android:title="deepl" />
     </group>
-    <group>
-        <item android:title="Duden" />
-        <item android:title="Redensarten-Index" />
-        <item android:title="Wiktionary" />
+    <!--    <item android:title="Links">-->
+    <!--        <menu>-->
+    <group android:id="@+id/Links">
+        <item
+            android:icon="@drawable/ic_duden"
+            android:title="Duden" />
+        <item
+            android:icon="@drawable/ic_redensarten_index"
+            android:title="Redensarten-Index" />
+        <item
+            android:icon="@drawable/ic_wiktionary"
+            android:title="Wiktionary" />
     </group>
+    <!--        </menu>-->
+    <!--    </item>-->
+    <!--    <item-->
+    <!--        android:id="@+id/submenu"-->
+    <!--        android:title="App">-->
+    <!--        <menu>-->
     <group>
         <item
             android:id="@+id/settingsFragment"
+            android:icon="@drawable/ic_baseline_settings_24"
             android:title="settings" />
     </group>
+    <!--        </menu>-->
+    <!--    </item>-->
 
 </menu>
+
+    <!--https://stackoverflow.com/questions/38283373/how-to-draw-a-line-between-menu-item-in-navigation-drawer#38283421-->
+    <!--https://stackoverflow.com/questions/35336824/using-png-icon-as-drawable-in-navigationdrawer-->

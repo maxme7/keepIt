@@ -6,7 +6,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.SubMenu
 import android.view.Window
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -32,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfig: AppBarConfiguration
 
     private lateinit var destinationChangeListener: NavController.OnDestinationChangedListener
+    private lateinit var drawer: DrawerLayout
 
     private val bookmarks: MutableList<String> = mutableListOf()
 
@@ -39,7 +43,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val drawer = findViewById<NavigationView>(R.id.navigationView)
+        var toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
+
+//        This makes back arrow open drawer instead of popping from backstack:
+//        var toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+//        drawer.addDrawerListener(toggle)
+//        toggle.syncState()
 
         setupDrawer()
 
@@ -60,6 +72,17 @@ class MainActivity : AppCompatActivity() {
 //            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
 //        )
 //        supportActionBar?.title = s
+    }
+
+    //TODO hamburger menu animation too fast
+    //TODO how to set fragment transition animations? (since menu is taking care of transitions)
+
+    override fun onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer((GravityCompat.START))
+        } else {
+            super.onBackPressed()
+        }
     }
 
     private fun setupDrawer() {
@@ -122,6 +145,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     //https://developer.android.com/training/appbar/actions
+    //TODO back and forward navigation (own action bar for webviews?)
 //    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
 //        R.id.bookmarkButton -> {
 ////            val s = editText.text.toString()

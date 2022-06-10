@@ -13,5 +13,6 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.keepit.fragments.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:label="SettingsFragment">
+    </fragment>
 </navigation>

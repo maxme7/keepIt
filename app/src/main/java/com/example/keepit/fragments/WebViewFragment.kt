@@ -7,10 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import androidx.viewpager2.widget.ViewPager2
 import com.example.keepit.webview.CustomJavascriptInterface
 import com.example.keepit.webview.CustomWebViewClient
 import com.example.keepit.webview.InjectionObject
 import com.example.keepit.R
+import com.example.keepit.webview.FragmentAdapter
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
 private const val defaultUrl: String = "https://de.langenscheidt.com/deutsch-arabisch/gehen"
 //private const val defaultUrl: String = "https://de.langenscheidt.com/deutsch-englisch/bow"
@@ -66,7 +70,6 @@ class WebViewFragment : Fragment() {
 //            true
 //        }
 
-
         return fragm
     }
 
@@ -75,7 +78,7 @@ class WebViewFragment : Fragment() {
 
         //load restored url after state change or default url
         webView.loadUrl(url ?: defaultUrl)
-        webView.scrollTo(0,scrollY)
+        webView.scrollTo(0, scrollY)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

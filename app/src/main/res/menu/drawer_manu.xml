@@ -9,6 +9,7 @@
             android:icon="@drawable/ic_langenscheidt"
             android:title="Langenscheidt" />
         <item
+            android:id="@+id/tabLayoutFragment"
             android:icon="@drawable/ic_yandex"
             android:title="Yandex" />
         <item

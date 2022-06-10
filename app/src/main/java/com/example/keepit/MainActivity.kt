@@ -12,16 +12,20 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
+import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.room.Room
+import androidx.viewpager2.widget.ViewPager2
 import com.example.keepit.enums.Language
 import com.example.keepit.room.AppDatabase
 import com.example.keepit.room.DictEntry
+import com.example.keepit.webview.FragmentAdapter
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.runBlocking
 import java.util.*
 
@@ -48,10 +52,15 @@ class MainActivity : AppCompatActivity() {
 
         drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
 
-//        This makes back arrow open drawer instead of popping from backstack:
+        //TODO hide toolbar on scroll down webview??
+//        supportActionBar?.hide()
+//        supportActionBar?.subtitle = "subtitle"
+
+//        This makes back arrow open drawer instead of going back to home:
 //        var toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
 //        drawer.addDrawerListener(toggle)
 //        toggle.syncState()
+
 
         setupDrawer()
 

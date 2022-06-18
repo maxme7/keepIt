@@ -1,34 +1,40 @@
 package com.example.keepit
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
-import android.view.SubMenu
-import android.view.Window
-import androidx.appcompat.app.ActionBarDrawerToggle
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
-import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.room.Room
-import androidx.viewpager2.widget.ViewPager2
+import com.example.keepit.broadcastReceiver.NotificationReceiver
 import com.example.keepit.enums.Language
+import com.example.keepit.enums.NotificationAction
 import com.example.keepit.room.AppDatabase
 import com.example.keepit.room.DictEntry
-import com.example.keepit.webview.FragmentAdapter
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.runBlocking
 import java.util.*
 
+var index = 0
 
 class MainActivity : AppCompatActivity() {
 //    private lateinit var button: ImageButton
@@ -42,6 +48,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawer: DrawerLayout
 
     private val bookmarks: MutableList<String> = mutableListOf()
+
+    private var notificationManager: NotificationManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +80,12 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        createNotificationChannel("flashcard_notifications", "Flashcard Notifications", "Notification Channel for showing current Flash Card")
+
+        createNotification(TextView(this))
+
+
         //https://stackoverflow.com/questions/33698122/android-change-actionbar-title-text-color
 //        val s = SpannableString(title)
 //        s.setSpan(
@@ -81,6 +95,54 @@ class MainActivity : AppCompatActivity() {
 //            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
 //        )
 //        supportActionBar?.title = s
+
+        NotificationReceiver.index = 100 //remotely modify companion TODO
+    }
+
+    fun createNotificationChannel(id: String, name: String, description: String) {
+        if (notificationManager != null) {
+            NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW).apply {
+                this.description = description
+                enableLights(true)
+                lightColor = Color.RED
+                vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
+                notificationManager!!.createNotificationChannel(this)
+            }
+        }
+    }
+
+    val notificationID = 42
+
+
+    fun createNotification(v: View) {
+        val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        val intent = Intent(this, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val broadcastIntent = Intent(this, NotificationReceiver::class.java)
+        broadcastIntent.putExtra("action", NotificationAction.SKIP.toString())
+        val pendingActionIntent: PendingIntent = PendingIntent.getBroadcast(this, 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        Notification.Builder(this, "flashcard_notifications")
+            .setContentTitle("flashcard")
+            .setContentText("word")
+            .setSmallIcon(R.drawable.ic_baseline_filter_alt_24)
+            .setColor(Color.BLUE)
+            .setContentIntent(pendingIntent)
+
+            .setStyle(Notification.MediaStyle().setShowActionsInCompactView(0,1,2)) //media style // indices of actions (max 3) when compact
+            .setVisibility(Notification.VISIBILITY_PUBLIC) //content shown on lockscreen
+            .setOngoing(true) //can't be swiped away
+
+            .addAction(R.drawable.ic_baseline_arrow_forward_24, "SKIP", pendingActionIntent)
+            .addAction(R.drawable.ic_baseline_arrow_forward_24, "SKIP", pendingActionIntent)
+            .addAction(R.drawable.ic_baseline_arrow_forward_24, "SKIP", pendingActionIntent)
+            .addAction(R.drawable.ic_baseline_arrow_forward_24, "Close", pendingActionIntent) //cancel notification
+
+            .build().apply { notificationManager.notify(notificationID, this) }
+
+        // open fragment with notifiaction tap: https://stackoverflow.com/questions/26608627/how-to-open-fragment-page-when-pressed-a-notification-in-android#26608894
     }
 
     //TODO hamburger menu animation too fast
@@ -197,5 +259,8 @@ class MainActivity : AppCompatActivity() {
 //    }
 
 }
+
+
+// broadcast receiver and notifications: https://www.youtube.com/watch?v=CZ575BuLBo4
 
 // save in bundle: https://medium.com/@evanbishop/saving-state-through-the-bundle-when-you-rotate-the-screen-d913422fe4f6

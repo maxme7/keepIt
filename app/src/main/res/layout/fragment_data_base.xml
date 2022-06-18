@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragments.DataBaseFragment">
+
+    <data>
+
+        <variable
+            name="dbModel"
+            type="com.example.keepit.models.DataBaseViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Spinner
+            android:id="@+id/sourceLangSpinner"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="127dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Spinner
+            android:id="@+id/targetLangSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="37dp"
+            app:layout_constraintEnd_toEndOf="@+id/sourceLangSpinner"
+            app:layout_constraintStart_toStartOf="@+id/sourceLangSpinner"
+            app:layout_constraintTop_toBottomOf="@+id/sourceLangSpinner" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="62dp"
+            android:text="@{dbModel.targetLangString}"
+            app:layout_constraintEnd_toEndOf="@+id/targetLangSpinner"
+            app:layout_constraintStart_toStartOf="@+id/targetLangSpinner"
+            app:layout_constraintTop_toBottomOf="@+id/targetLangSpinner" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="270dp"
+            android:text="@{dbModel.sourceLangString}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/textView2"
+            app:layout_constraintStart_toStartOf="@+id/textView2" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={dbModel.sourceLangString}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

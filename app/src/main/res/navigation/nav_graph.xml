@@ -19,4 +19,14 @@
         android:id="@+id/webViewFragment"
         android:name="com.example.keepit.fragments.WebViewFragment"
         android:label="WebViewFragment" />
+    <fragment
+        android:id="@+id/dataBaseFragment"
+        android:name="com.example.keepit.fragments.DataBaseFragment"
+        android:label="fragment_data_base"
+        tools:layout="@layout/fragment_data_base" />
+    <fragment
+        android:id="@+id/testFragment"
+        android:name="com.example.keepit.fragments.testFragment"
+        android:label="fragment_test"
+        tools:layout="@layout/fragment_test" />
 </navigation>

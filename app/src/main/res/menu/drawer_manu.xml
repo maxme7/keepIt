@@ -41,6 +41,16 @@
     <!--        android:id="@+id/submenu"-->
     <!--        android:title="App">-->
     <!--        <menu>-->
+    <group android:id="@+id/manage_app">
+        <item
+            android:id="@+id/testFragment"
+            android:icon="@drawable/ic_baseline_forum_24"
+            android:title="flash cards" />
+        <item
+            android:id="@+id/dataBaseFragment"
+            android:icon="@drawable/ic_baseline_folder_open_24"
+            android:title="manage database" />
+    </group>
     <group>
         <item
             android:id="@+id/settingsFragment"

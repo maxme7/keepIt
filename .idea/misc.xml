@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Aron/AppData/Local/Android/Sdk/platforms/android-31/data/res/layout/simple_list_item_1.xml" value="0.1" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/drawable/deepl.xml" value="0.1" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.182" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/drawable/ic_deepl.xml" value="0.1" />
@@ -12,7 +13,10 @@
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/drawable/ic_langenscheidt.xml" value="0.1" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/drawable/ic_yandex_y.xml" value="0.1" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/layout/activity_main.xml" value="0.12886597938144329" />
+        <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/layout/fragment_data_base.xml" value="0.2364179037174423" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/layout/fragment_langenscheidt.xml" value="0.1" />
+        <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/layout/fragment_tab_layout.xml" value="0.1109375" />
+        <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/layout/fragment_test.xml" value="0.13645833333333332" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/layout/fragment_web_view.xml" value="0.10208333333333333" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/menu/drawer_manu.xml" value="0.35820894502642775" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/menu/web_menu.xml" value="0.20677083333333332" />

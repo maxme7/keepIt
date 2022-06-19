@@ -1,11 +1,5 @@
 package com.example.keepit.fragments
 
-import android.app.Notification
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,17 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import android.widget.TextView
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.viewpager2.widget.ViewPager2
-import com.example.keepit.MainActivity
 import com.example.keepit.webview.CustomJavascriptInterface
 import com.example.keepit.webview.CustomWebViewClient
 import com.example.keepit.webview.InjectionObject
 import com.example.keepit.R
-import com.example.keepit.webview.FragmentAdapter
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 
 private const val defaultUrl: String = "https://de.langenscheidt.com/deutsch-arabisch/gehen"
 //private const val defaultUrl: String = "https://de.langenscheidt.com/deutsch-englisch/bow"

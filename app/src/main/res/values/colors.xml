@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="frog_green">#CDDC39</color>
     <color name="dark_red">#B02732</color>
+
+    <color name="notification_text">#B02732</color>
 </resources>

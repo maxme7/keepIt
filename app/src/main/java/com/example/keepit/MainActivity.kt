@@ -1,19 +1,8 @@
 package com.example.keepit
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.View
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -25,16 +14,14 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.room.Room
-import com.example.keepit.broadcastReceiver.NotificationReceiver
 import com.example.keepit.enums.Language
-import com.example.keepit.enums.NotificationAction
+import com.example.keepit.notifications.OngoingMediaNotification
 import com.example.keepit.room.AppDatabase
 import com.example.keepit.room.DictEntry
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.runBlocking
 import java.util.*
 
-var index = 0
 
 class MainActivity : AppCompatActivity() {
 //    private lateinit var button: ImageButton
@@ -49,13 +36,11 @@ class MainActivity : AppCompatActivity() {
 
     private val bookmarks: MutableList<String> = mutableListOf()
 
-    private var notificationManager: NotificationManager? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var toolbar: Toolbar = findViewById(R.id.toolbar)
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
@@ -80,12 +65,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        createNotificationChannel("flashcard_notifications", "Flashcard Notifications", "Notification Channel for showing current Flash Card")
-
-        createNotification(TextView(this))
-
-
         //https://stackoverflow.com/questions/33698122/android-change-actionbar-title-text-color
 //        val s = SpannableString(title)
 //        s.setSpan(
@@ -95,55 +74,8 @@ class MainActivity : AppCompatActivity() {
 //            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
 //        )
 //        supportActionBar?.title = s
-
-        NotificationReceiver.index = 100 //remotely modify companion TODO
     }
 
-    fun createNotificationChannel(id: String, name: String, description: String) {
-        if (notificationManager != null) {
-            NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW).apply {
-                this.description = description
-                enableLights(true)
-                lightColor = Color.RED
-                vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
-                notificationManager!!.createNotificationChannel(this)
-            }
-        }
-    }
-
-    val notificationID = 42
-
-
-    fun createNotification(v: View) {
-        val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        val intent = Intent(this, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-        val broadcastIntent = Intent(this, NotificationReceiver::class.java)
-        broadcastIntent.putExtra("action", NotificationAction.SKIP.toString())
-        val pendingActionIntent: PendingIntent = PendingIntent.getBroadcast(this, 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-        Notification.Builder(this, "flashcard_notifications")
-            .setContentTitle("flashcard")
-            .setContentText("word")
-            .setSmallIcon(R.drawable.ic_baseline_filter_alt_24)
-            .setColor(Color.BLUE)
-            .setContentIntent(pendingIntent)
-
-            .setStyle(Notification.MediaStyle().setShowActionsInCompactView(0,1,2)) //media style // indices of actions (max 3) when compact
-            .setVisibility(Notification.VISIBILITY_PUBLIC) //content shown on lockscreen
-            .setOngoing(true) //can't be swiped away
-
-            .addAction(R.drawable.ic_baseline_arrow_forward_24, "SKIP", pendingActionIntent)
-            .addAction(R.drawable.ic_baseline_arrow_forward_24, "SKIP", pendingActionIntent)
-            .addAction(R.drawable.ic_baseline_arrow_forward_24, "SKIP", pendingActionIntent)
-            .addAction(R.drawable.ic_baseline_arrow_forward_24, "Close", pendingActionIntent) //cancel notification
-
-            .build().apply { notificationManager.notify(notificationID, this) }
-
-        // open fragment with notifiaction tap: https://stackoverflow.com/questions/26608627/how-to-open-fragment-page-when-pressed-a-notification-in-android#26608894
-    }
 
     //TODO hamburger menu animation too fast
     //TODO how to set fragment transition animations? (since menu is taking care of transitions)
@@ -199,6 +131,11 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         navController.removeOnDestinationChangedListener(destinationChangeListener)
+
+        // when app is not yet up completely, notifications (in onDestroy) don't get deleted; either pressing home button or task manager too early
+        // put notificationSetup() somewhere where it is guaranteed that app will be up completely. (maybe where you select word set
+        OngoingMediaNotification.setup(
+            this) //TODO if statement; only setup, when setting flashcard notifications is true -> probably make a "start button" triggering notifications
     }
 
     override fun onResume() {
@@ -213,6 +150,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.web_menu, menu)
         return true
+    }
+
+    override fun onDestroy() {
+//        OngoingMediaNotification.deleteChannel(this) //rather cancel notifications then delete whole channel
+        OngoingMediaNotification.cancelAll(this)
+
+        super.onDestroy()
     }
 
     //https://developer.android.com/training/appbar/actions

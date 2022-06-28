@@ -9,7 +9,7 @@ class DataBaseViewModel : ViewModel() {
     //TODO how to use livedata with non-primitive types
 
     private lateinit var sourceLang: Language
-    val sourceLangString = MutableLiveData<String>("dick") //to use in xml layout
+    val sourceLangString = MutableLiveData<String>("here") //to use in xml layout
 
     private lateinit var targetLang: Language
     val targetLangString = MutableLiveData<String>()

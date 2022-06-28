@@ -1,18 +1,22 @@
+const starFull = "https://www.reshot.com/preview-assets/icons/2UF67VNTWE/star-2UF67VNTWE.svg";
+const starEmpty = "https://www.reshot.com/preview-assets/icons/GC6DYT5UXL/star-GC6DYT5UXL.svg";
+
 let lemmaSelector = ".lemma-group .lemma-entry .inter";  //.col1 .lemma-pieces
 let textContentSelector = ".trans a";
 
 let entries = document.querySelectorAll(lemmaSelector);
 
-for(let e of entries){
+for(let entry of entries){
     let i = document.createElement("img");
-    i.src="https://www.reshot.com/preview-assets/icons/GC6DYT5UXL/star-GC6DYT5UXL.svg"; //star img
     i.width="30";
     i.height="30";
 
     let injectionObject = JSON.parse(android.getInjectionObject()); //currently not used TODO
 
+    //TODO can I insert svg?
+
     function getTargetWord(){
-        let span =  e.querySelector(".trans")
+        let span =  entry.querySelector(".trans")
 
         //get deepest .trans class
         while(true){
@@ -28,7 +32,7 @@ for(let e of entries){
     }
 
     function getSourceWord(){
-        let span = e.querySelector(".mobile .lemma-pieces")
+        let span = entry.querySelector(".mobile .lemma-pieces")
         return span.textContent
     }
 
@@ -56,16 +60,22 @@ for(let e of entries){
 
     function getInd(){
         let span = getParentLemmaEntry().querySelector(".ind-pieces")
+        if(span == null) return null
+
         for(let s of span.querySelectorAll(".abbr")) s.remove() //removes hint box //TODO dont remove?
-        return span != null ? span.textContent : null
+        return span.textContent
     }
 
     function getParentLemmaEntry(){
-        return e.closest(".lemma-entry")
+        return entry.closest(".lemma-entry")
     }
 
-    i.addEventListener('click', () => {
-        android.addEntry( //TODO rude!! to many arguments (?)
+    function insertEntry(e){
+        e.currentTarget.src = starFull
+        e.currentTarget.removeEventListener('click', (e) => insertEntry(e))
+        e.currentTarget.addEventListener('click', (e) => deleteEntry(e))
+
+        android.insertEntry( //TODO rude!! to many arguments (?)
             window.location.href,
             getSourceLang(),
             getTargetLang(),
@@ -74,8 +84,34 @@ for(let e of entries){
             getGram(),
             getPhon(),
             getInd()
-            );
-    });
+        );
+    }
 
-    e.appendChild(i);
+    function deleteEntry(e){
+        e.currentTarget.src = starEmpty
+        e.currentTarget.removeEventListener('click', (e) => deleteEntry(e))
+        e.currentTarget.addEventListener('click', (e) => insertEntry(e))
+
+        android.deleteEntry(
+            getSourceLang(),
+            getTargetLang(),
+            getSourceWord(),
+            getTargetWord(),
+            getGram(),
+            getPhon(),
+            getInd()
+        );
+    }
+
+    let doesExist = android.entryExists(getSourceLang(), getTargetLang(), getSourceWord(), getTargetWord(), getGram(), getPhon(), getInd())
+
+    if(doesExist){
+        i.src = starFull;
+        i.addEventListener('click', (e) => deleteEntry(e));
+    }else{
+        i.src = starEmpty; //star img
+        i.addEventListener('click', (e) => insertEntry(e));
+    }
+
+    entry.appendChild(i);
 }

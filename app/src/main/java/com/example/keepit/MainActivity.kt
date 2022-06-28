@@ -1,10 +1,13 @@
 package com.example.keepit
 
+import android.Manifest.permission.*
 import android.os.Bundle
+import android.provider.BaseColumns
 import android.util.Log
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
@@ -15,6 +18,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.room.Room
 import com.example.keepit.enums.Language
+import com.example.keepit.fragments.WebViewFragment
 import com.example.keepit.notifications.OngoingMediaNotification
 import com.example.keepit.room.AppDatabase
 import com.example.keepit.room.DictEntry
@@ -42,6 +46,8 @@ class MainActivity : AppCompatActivity() {
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+
+        ActivityCompat.requestPermissions(this, arrayOf(READ_EXTERNAL_STORAGE), 1) //TODO update to current permissions
 
         drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
 
@@ -81,8 +87,13 @@ class MainActivity : AppCompatActivity() {
     //TODO how to set fragment transition animations? (since menu is taking care of transitions)
 
     override fun onBackPressed() {
+//        can't get fragment reference //returns null
+//        val webViewFragment = supportFragmentManager.findFragmentById(R.id.webViewFragment) as WebViewFragment
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer((GravityCompat.START))
+//        } else if (webViewFragment.getWebView().canGoBack()) {
+            //goBack() in webview
         } else {
             super.onBackPressed()
         }
@@ -108,24 +119,26 @@ class MainActivity : AppCompatActivity() {
         val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "dictentries").build()
         val dictEntryDao = db.dictEntryDao()
 
-        dictEntryDao.deleteAll()
-        dictEntryDao.insertAll(
-            DictEntry("some.url", Date(), Language.AR, Language.DE, "Adam", "1st Street", null, null, null, arrayOf()),
-        )
-
-        val dictEntries: List<DictEntry> = dictEntryDao.getAll()
-        for (e in dictEntries) {
-            Log.i("Room",
-                "${e.url} ${e.date} ${e.sourceLang} ${e.targetLang} ${e.sourceWord} ${e.targetWord} ${e.gram} ${e.phon} ${e.ind} ${
-                    arrayToString(e.categories)
-                }")
-        }
+//        dictEntryDao.deleteAll() //TODO
+//        dictEntryDao.insertAll(
+//            DictEntry("some.url", Date(), Language.AR, Language.DE, "Adam", "1st Street", null, null, null, arrayOf()),
+//        )
+//
+//        val dictEntries: List<DictEntry> = dictEntryDao.getAll()
+//        for (e in dictEntries) {
+//            Log.i("Room",
+//                "${e.url} ${e.date} ${e.sourceLang} ${e.targetLang} ${e.sourceWord} ${e.targetWord} ${e.gram} ${e.phon} ${e.ind} ${
+//                    arrayToString(e.categories)
+//                }")
+//        }
     }
 
-    fun arrayToString(array: Array<String>): String {
-        var string = "["
-        array.forEach { string += "$it," }
-        return string.substringBeforeLast(',') + "]"
+    companion object {
+        fun arrayToString(array: Array<String>): String { //TODO move
+            var string = "["
+            array.forEach { string += "$it," }
+            return string.substringBeforeLast(',') + "]"
+        }
     }
 
     override fun onPause() {

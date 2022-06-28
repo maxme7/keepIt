@@ -76,6 +76,12 @@ class OngoingMediaNotification {
             val nextPendingIntent = createBroadcastIntend(context, NotificationAction.NEXT)
             val cancelPendingIntent = createBroadcastIntend(context, NotificationAction.CANCEL)
 
+            //conditionally change action
+            var action = Notification.Action(R.drawable.ic_baseline_screen_rotation_alt_32, "SHOW", showPendingIntent)
+            if (NotificationReceiver.index % 2 == 1) {
+                action = Notification.Action(R.drawable.ic_baseline_replay_5_32, "SKIP", skipPendingIntent)
+            }
+
             return Notification.Builder(context, CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(text)
@@ -90,11 +96,11 @@ class OngoingMediaNotification {
                 .setVisibility(Notification.VISIBILITY_PUBLIC) //content shown on lockscreen
                 .setOngoing(true) //can't be swiped away
 
-                    //TODO find good icons
-                .addAction(R.drawable.ic_baseline_arrow_forward_24, "SKIP", skipPendingIntent)
-                .addAction(R.drawable.ic_baseline_arrow_forward_24, "NEXT", nextPendingIntent)
-                .addAction(R.drawable.ic_baseline_arrow_forward_24, "SHOW", showPendingIntent)
-                .addAction(R.drawable.ic_baseline_arrow_forward_24, "Cancel", cancelPendingIntent) //cancel notification
+                //TODO find good icons
+                .addAction(R.drawable.ic_outline_done_32, "NEXT", nextPendingIntent)
+                .addAction(action)
+                .addAction(R.drawable.ic_baseline_skip_next_32, "SKIP", skipPendingIntent)
+                .addAction(R.drawable.ic_cancel, "Cancel", cancelPendingIntent) //cancel notification
 
                 .build()
         }

@@ -7,6 +7,11 @@
             app:title="@string/signature_title"
             app:useSimpleSummaryProvider="true" />
 
+        <EditTextPreference
+            app:key="signature"
+            app:title="@string/signature_title"
+            app:useSimpleSummaryProvider="true" />
+
         <ListPreference
             app:defaultValue="reply"
             app:entries="@array/reply_entries"
@@ -21,7 +26,7 @@
 
         <SwitchPreferenceCompat
             app:key="sync"
-            app:title="@string/sync_title" />
+            app:title="Allow Notifications" />
 
         <SwitchPreferenceCompat
             app:dependency="sync"

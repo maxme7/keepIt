@@ -7,22 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import com.example.keepit.webview.CustomJavascriptInterface
 import com.example.keepit.webview.CustomWebViewClient
 import com.example.keepit.webview.InjectionObject
 import com.example.keepit.R
 
-private const val defaultUrl: String = "https://de.langenscheidt.com/deutsch-arabisch/gehen"
+private const val defaultUrl: String = "https://www.duden.de"
 //private const val defaultUrl: String = "https://de.langenscheidt.com/deutsch-englisch/bow"
 
-class WebViewFragment : Fragment() {
+class DudenFragment : Fragment() {
     private lateinit var webView: WebView
     private var url: String? = null
     private var scrollY: Int = 0
-
-    fun getWebView(): WebView { //TODO
-        return this.webView
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -30,7 +27,7 @@ class WebViewFragment : Fragment() {
 
         //setup
         webView = fragm.findViewById(R.id.webView) //view binding?
-        webView.webViewClient = CustomWebViewClient()
+        webView.webViewClient = WebViewClient()//CustomWebViewClient()
 
 
         Log.i("WEB", url.toString())
@@ -81,14 +78,14 @@ class WebViewFragment : Fragment() {
         webView.scrollTo(0, scrollY)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) { //TODO called when minimizing app but no on if nav drawer change
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("url", webView.url)
         outState.putInt("scrollY", webView.scrollY) //not perfect, but better. different layouts do not match with scrollY TODO
     }
 
     // restored after onStart() and before onResume()
-    override fun onViewStateRestored(savedInstanceState: Bundle?) { //TODO called on start and switching back with nav drawer but not if minimize app
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         url = savedInstanceState?.getString("url")
         scrollY = savedInstanceState?.getInt("scrollY") ?: 0

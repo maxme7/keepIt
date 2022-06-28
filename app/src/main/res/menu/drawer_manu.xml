@@ -26,12 +26,15 @@
     <!--        <menu>-->
     <group android:id="@+id/Links">
         <item
+            android:id="@+id/dudenFragment"
             android:icon="@drawable/ic_duden"
             android:title="Duden" />
         <item
+            android:id="@+id/redensartenIndexFragment"
             android:icon="@drawable/ic_redensarten_index"
             android:title="Redensarten-Index" />
         <item
+            android:id="@+id/wiktionaryFragment"
             android:icon="@drawable/ic_wiktionary"
             android:title="Wiktionary" />
     </group>

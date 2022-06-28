@@ -14,6 +14,7 @@ import com.example.keepit.databinding.FragmentDataBaseBinding
 import com.example.keepit.enums.Language
 import com.example.keepit.models.DataBaseViewModel
 import com.example.keepit.BR.dbModel
+import com.example.keepit.DictEntryRecyclerViewAdapter
 
 class DataBaseFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
@@ -34,6 +35,9 @@ class DataBaseFragment : Fragment(), AdapterView.OnItemSelectedListener {
         tarSpinner.adapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, Language.values())
         tarSpinner.onItemSelectedListener = this
 
+        //listview
+        val adapter = DictEntryRecyclerViewAdapter(this, androidx.appcompat.R.layout.abc_popup_menu_header_item_layout, [])
+        binding.listView.adapter = adapter
 
         return binding.root
     }

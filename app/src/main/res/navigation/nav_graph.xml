@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/settingsFragment">
+    app:startDestination="@id/webViewFragment">
 
     <fragment
         android:id="@+id/settingsFragment"
@@ -29,4 +29,16 @@
         android:name="com.example.keepit.fragments.testFragment"
         android:label="fragment_test"
         tools:layout="@layout/fragment_test" />
+    <fragment
+        android:id="@+id/wiktionaryFragment"
+        android:name="com.example.keepit.fragments.WiktionaryFragment"
+        android:label="WiktionaryFragment" />
+    <fragment
+        android:id="@+id/dudenFragment"
+        android:name="com.example.keepit.fragments.DudenFragment"
+        android:label="DudenFragment" />
+    <fragment
+        android:id="@+id/redensartenIndexFragment"
+        android:name="com.example.keepit.fragments.RedensartenIndexFragment"
+        android:label="RedensartenIndexFragment" />
 </navigation>

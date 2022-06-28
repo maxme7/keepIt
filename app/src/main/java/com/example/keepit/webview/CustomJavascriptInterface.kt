@@ -1,15 +1,21 @@
 package com.example.keepit.webview
 
+import android.app.Activity
 import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
+import androidx.room.Room
+import com.example.keepit.MainActivity
 import com.example.keepit.enums.Language
+import com.example.keepit.room.AppDatabase
 import com.example.keepit.room.DictEntry
 import com.google.gson.Gson
+import kotlinx.coroutines.runBlocking
 import java.util.*
 
-class CustomJavascriptInterface(private val webView: WebView, private val injectionObject: InjectionObject) {
+class CustomJavascriptInterface(private val activity: FragmentActivity?, private val webView: WebView, private val injectionObject: InjectionObject) {
 
     private val gson = Gson()
 
@@ -27,11 +33,47 @@ class CustomJavascriptInterface(private val webView: WebView, private val inject
     }
 
     @JavascriptInterface @Throws(Exception::class)
-    fun addEntry(url: String, sourceLang: String, targetLang: String, sourceWord: String, targetWord: String, gram: String?,
-                 phon: String?, ind: String?): Boolean {
+    fun entryExists(sourceLang: String?, targetLang: String?, sourceWord: String?, targetWord: String?, gram: String?, phon: String?,
+                    ind: String?): Boolean {
+
+        val dictEntries: List<DictEntry> = findEntry(sourceLang, targetLang, sourceWord, targetWord, gram, phon, ind)
+        for (e in dictEntries) {
+            Log.i("EX",
+                "${e.targetWord} ${e.sourceWord}")
+        }
+
+        return dictEntries.isNotEmpty()
+    }
+
+    fun findEntry(sourceLang: String?, targetLang: String?, sourceWord: String?, targetWord: String?, gram: String?, phon: String?,
+                  ind: String?): List<DictEntry> {
+        return runBlocking {  //TODO Blocking a porblem when db gets bigger?
+            val db = Room.databaseBuilder(activity!!.applicationContext, AppDatabase::class.java, "dictentries").build()
+            val dictEntryDao = db.dictEntryDao()
+
+            if (sourceLang != null && targetLang != null && sourceWord != null && targetWord != null) {
+                return@runBlocking dictEntryDao.find(
+                    Language.valueOf(sourceLang.uppercase()),
+                    Language.valueOf(targetLang.uppercase()),
+                    sourceWord, targetWord,
+                    gram.toString(), phon.toString(), ind.toString())
+            } else {
+                Log.d("JavascriptInterface", "required arguments are null!")
+                return@runBlocking emptyList();
+            }
+        }
+    }
+
+    fun me() {
+        webView.loadUrl("javascript: console.log('hey');")
+    }
+
+    @JavascriptInterface @Throws(Exception::class)
+    fun insertEntry(url: String, sourceLang: String, targetLang: String, sourceWord: String, targetWord: String, gram: String?,
+                    phon: String?, ind: String?): Boolean {
 //        val injectionObject: ArrayList<DictEntry> = ArrayList()
 
-        Toast.makeText(webView.context, url, Toast.LENGTH_SHORT).show()
+//        Toast.makeText(webView.context, url, Toast.LENGTH_SHORT).show()
 
         val entry = DictEntry(
             url,
@@ -40,12 +82,45 @@ class CustomJavascriptInterface(private val webView: WebView, private val inject
             Language.valueOf(targetLang.uppercase()),
             sourceWord,
             targetWord,
-            gram,
-            phon,
-            ind,
+            gram ?: "null",
+            phon ?: "null",
+            ind ?: "null",
             emptyArray()) //TODO categories (?)
 
         Log.i("ENTRY", entry.toString())
+
+        runBlocking {
+            val db = Room.databaseBuilder(activity!!.applicationContext, AppDatabase::class.java, "dictentries").build()
+            val dictEntryDao = db.dictEntryDao()
+
+            //TODO make sure not inserted twice
+            dictEntryDao.insertAll(entry)
+
+            val dictEntries: List<DictEntry> = dictEntryDao.getAll()
+            for (e in dictEntries) {
+                Log.i("Room",
+                    "${e.url} ${e.date} ${e.sourceLang} ${e.targetLang} ${e.sourceWord} ${e.targetWord} ${e.gram} ${e.phon} ${e.ind} ${
+                        MainActivity.arrayToString(e.categories)
+                    }")
+            }
+        }
+
+        return true
+    }
+
+    @JavascriptInterface @Throws(Exception::class)
+    fun deleteEntry(sourceLang: String, targetLang: String, sourceWord: String, targetWord: String, gram: String?,
+                    phon: String?, ind: String?): Boolean {
+
+        runBlocking {
+            val db = Room.databaseBuilder(activity!!.applicationContext, AppDatabase::class.java, "dictentries").build()
+            val dictEntryDao = db.dictEntryDao()
+
+            val entries = findEntry(sourceLang, targetLang, sourceWord, targetWord, gram, phon, ind)
+            if (entries.size > 1) Log.d("JavascriptInterface", "found multiple entries where only one was expected!")
+            dictEntryDao.delete(entries[0])
+        }
+
         return true
     }
 

@@ -10,7 +10,7 @@ class CustomWebViewClient : WebViewClient() {
 
     override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
 
-        //Currently only for langenscheidt; filters cookies and add banner TODO
+        //Currently only for langenscheidt; filters cookies and ad banner TODO
         if (request?.url.toString().contains("langenscheidt") || request?.url.toString().contains("cloudfront") || request?.url.toString()
                 .contains("svg")
         ) {
@@ -18,7 +18,7 @@ class CustomWebViewClient : WebViewClient() {
             return super.shouldInterceptRequest(view, request)
         } else {
             Log.i("FILTERED", request?.url.toString())
-            return WebResourceResponse("text/javascript", "UTF-8", null)
+            return WebResourceResponse("text/javascript", "UTF-8", null) //empty web resource response
         }
     }
 
@@ -34,6 +34,10 @@ class CustomWebViewClient : WebViewClient() {
 //        Toast.makeText(view.context, "شسيب", Toast.LENGTH_LONG).show()
         if (!failedLoading) {
         }
+
+        Log.i("RE", view.progress.toString())
+        if(view.progress < 100) return
+        //called before progress 100%: https://stackoverflow.com/questions/18282892/android-webview-onpagefinished-called-twice
 
         //apply javascript
         //https://stackoverflow.com/questions/19621427/webview-manipulate-dom-after-webpage-has-been-loaded

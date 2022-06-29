@@ -79,8 +79,12 @@ class MainActivity : AppCompatActivity() {
             val dictEntryDao = db.dictEntryDao()
 
             NotificationReceiver.list = dictEntryDao.getEntriesByLang(Language.DE, Language.AR)
+
         }
 
+        NotificationReceiver.cancel = {
+            OngoingMediaNotification.cancelAll(this)
+        }
 
         //https://stackoverflow.com/questions/33698122/android-change-actionbar-title-text-color
 //        val s = SpannableString(title)

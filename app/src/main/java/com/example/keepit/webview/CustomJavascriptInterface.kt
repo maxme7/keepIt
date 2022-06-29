@@ -47,10 +47,11 @@ class CustomJavascriptInterface(private val activity: FragmentActivity?, private
 
     fun findEntry(sourceLang: String?, targetLang: String?, sourceWord: String?, targetWord: String?, gram: String?, phon: String?,
                   ind: String?): List<DictEntry> {
-        return runBlocking {  //TODO Blocking a porblem when db gets bigger?
+        return runBlocking {  //TODO Blocking a problem when db gets bigger?
             val db = Room.databaseBuilder(activity!!.applicationContext, AppDatabase::class.java, "dictentries").build()
             val dictEntryDao = db.dictEntryDao()
 
+            //TODO bottleneck? blocking...  langenscheidt de en gehen or laufen an example where it takes relatively long
             if (sourceLang != null && targetLang != null && sourceWord != null && targetWord != null) {
                 return@runBlocking dictEntryDao.find(
                     Language.valueOf(sourceLang.uppercase()),

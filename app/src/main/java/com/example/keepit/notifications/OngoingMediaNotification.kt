@@ -34,8 +34,9 @@ class OngoingMediaNotification {
                 createChannel(context)
             }
 
-            val notification = create(context, "firstTitle", "firstText")
-            notificationManager.notify(NOTIFICATION_ID, notification)  //TODO initial notification (set to current flashcard)
+            NotificationReceiver.next(context, notificationManager)
+//            val notification = create(context, "firstTitle", "firstText")
+//            notificationManager.notify(NOTIFICATION_ID, notification)  //TODO initial notification (set to current flashcard)
 
 //            broadcast intent instead?
 //            val intent = Intent(context, NotificationReceiver::class.java)
@@ -77,9 +78,13 @@ class OngoingMediaNotification {
             val cancelPendingIntent = createBroadcastIntend(context, NotificationAction.CANCEL)
 
             //conditionally change action
-            var action = Notification.Action(R.drawable.ic_baseline_screen_rotation_alt_32, "SHOW", showPendingIntent)
-            if (NotificationReceiver.index % 2 == 1) {
-                action = Notification.Action(R.drawable.ic_baseline_replay_5_32, "SKIP", skipPendingIntent)
+            //TODO show different actions on "SHOW"
+            val action: Notification.Action
+            if (!NotificationReceiver.showing) {
+                action = Notification.Action(R.drawable.ic_baseline_screen_rotation_alt_32, "SHOW", showPendingIntent)
+            } else {
+                action = Notification.Action(R.drawable.ic_baseline_skip_next_32, "SKIP", skipPendingIntent)
+//                action = Notification.Action(R.drawable.ic_baseline_replay_5_32, "SKIP", skipPendingIntent)
             }
 
             return Notification.Builder(context, CHANNEL_ID)
@@ -92,14 +97,13 @@ class OngoingMediaNotification {
 
                 .setContentIntent(openActivityPendingIntent)
 
-                .setStyle(Notification.MediaStyle().setShowActionsInCompactView(0, 1, 2)) //media style // indices of actions (max 3) when compact
+                .setStyle(Notification.MediaStyle().setShowActionsInCompactView(0, 1)) //media style // indices of actions (max 3) when compact
                 .setVisibility(Notification.VISIBILITY_PUBLIC) //content shown on lockscreen
                 .setOngoing(true) //can't be swiped away
 
-                //TODO find good icons
                 .addAction(R.drawable.ic_outline_done_32, "NEXT", nextPendingIntent)
                 .addAction(action)
-                .addAction(R.drawable.ic_baseline_skip_next_32, "SKIP", skipPendingIntent)
+//                .addAction(R.drawable.ic_baseline_skip_next_32, "SKIP", skipPendingIntent)
                 .addAction(R.drawable.ic_cancel, "Cancel", cancelPendingIntent) //cancel notification
 
                 .build()

@@ -2,7 +2,7 @@ const starFull = "https://www.reshot.com/preview-assets/icons/2UF67VNTWE/star-2U
 const starEmpty = "https://www.reshot.com/preview-assets/icons/GC6DYT5UXL/star-GC6DYT5UXL.svg";
 
 let lemmaSelector = ".lemma-group .lemma-entry .inter";  //.col1 .lemma-pieces
-let textContentSelector = ".trans a";
+//let textContentSelector = ".trans a";
 
 let entries = document.querySelectorAll(lemmaSelector);
 
@@ -48,13 +48,14 @@ for(let entry of entries){
         return srcClass.split("-")[1]
     }
 
+    //TODO getParentLemmaEntry() might be not specific enough (as it was with phon)
     function getGram(){
         let span = getParentLemmaEntry().querySelector(".gram")
         return span != null ? span.textContent : null
     }
 
     function getPhon(){
-        let span = getParentLemmaEntry().querySelector(".phon")
+        let span = entry.querySelector(".phon")
         return span != null ? span.textContent : null
     }
 

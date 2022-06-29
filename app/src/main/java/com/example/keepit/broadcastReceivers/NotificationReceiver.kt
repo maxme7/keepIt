@@ -4,49 +4,63 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
-import com.example.keepit.DictEntryRecyclerViewAdapter
 import com.example.keepit.enums.NotificationAction
 import com.example.keepit.notifications.OngoingMediaNotification
-import com.example.keepit.room.AppDatabase
 import com.example.keepit.room.DictEntry
 
 class NotificationReceiver : BroadcastReceiver() {
 
     companion object {
-        var words = arrayOf("eins", "zwei", "drei")
-        var translations = arrayOf("one", "two", "three")
-        var word = words[0]
 
         var list = emptyList<DictEntry>()
         var index = 0
-
-        //TODO implement functions
+        var showing = false
 
         fun incrementIndex() {
-            if (index < list.size - 1) index ++
-                else index = 0
+            if (index < list.size - 1) index++
+            else index = 0
+
+            showing = false
         }
 
-        fun skip() {
-            //remotely modify companion
+//        fun skip(context: Context, notificationManager: NotificationManager) {
+//            incrementIndex()
+//            sdf(context, notificationManager, list[index].sourceWord + " | " + list[index].ind, "???")
+//        }
+
+        fun show(context: Context, notificationManager: NotificationManager) {
+            showing = true //has to change before update (and thus calling Notification.create)
+            updateNotification(context, notificationManager, getSrc(), getTarget())
+        }
+
+        fun next(context: Context, notificationManager: NotificationManager) {
             incrementIndex()
+            updateNotification(context, notificationManager, getSrc(), "")
         }
 
-        fun show() {
-
+        private fun getSrc(): String {
+            return if (list[index].ind != "null")
+                list[index].sourceWord + " " + list[index].ind
+            else
+                list[index].sourceWord
         }
 
-        fun next() {
-            incrementIndex()
+        private fun getTarget(): String {
+            return if (list[index].phon != "null")
+                list[index].targetWord + " " + list[index].phon
+            else
+                list[index].targetWord
         }
 
-        fun cancel() {
+        //remotely modify companion
+        var cancel: () -> Unit = {} //TODO good practice?
 
+        private fun updateNotification(context: Context, notificationManager: NotificationManager, title: String, text: String) {
+            val notification = OngoingMediaNotification.create(context, title, text)
+            notificationManager.notify(OngoingMediaNotification.NOTIFICATION_ID, notification)
         }
     }
+
 
     //TODO proper access of companion object
     //probably put list of word there, fetched from the db in main activity and set here in the companion
@@ -59,30 +73,10 @@ class NotificationReceiver : BroadcastReceiver() {
         intent?.getStringExtra(OngoingMediaNotification.EXTRA_NAME)?.let {
             val action: NotificationAction = NotificationAction.valueOf(it)
             when (action) {
-                NotificationAction.SKIP -> {
-                    val db = Room.databaseBuilder(context, AppDatabase::class.java, "dictentries").build() //db
-//                    Toast.makeText(context, db.toString(), Toast.LENGTH_LONG).show()
-
-                    val item = list[index]
-
-                    val notification = OngoingMediaNotification.create(context, item.sourceWord, item.targetWord)
-                    notificationManager.notify(OngoingMediaNotification.NOTIFICATION_ID, notification)
-                    incrementIndex()
-                }
-                NotificationAction.NEXT -> {
-                    val item = list[index]
-
-                    val notification = OngoingMediaNotification.create(context, item.sourceWord, item.targetWord)
-                    notificationManager.notify(OngoingMediaNotification.NOTIFICATION_ID, notification)
-                    incrementIndex()
-//                    Toast.makeText(context, "next", Toast.LENGTH_LONG).show()
-                }
-                NotificationAction.SHOW -> {
-//                    Toast.makeText(context, "show", Toast.LENGTH_LONG).show()
-                }
-                NotificationAction.CANCEL -> {
-//                    Toast.makeText(context, "cancle", Toast.LENGTH_LONG).show()
-                }
+                NotificationAction.SKIP -> next(context, notificationManager)  //TODO skip redundant?
+                NotificationAction.NEXT -> next(context, notificationManager)
+                NotificationAction.SHOW -> show(context, notificationManager)
+                NotificationAction.CANCEL -> cancel()
             }
         }
     }

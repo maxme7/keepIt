@@ -16,7 +16,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
+import com.example.keepit.broadcastReceivers.NotificationReceiver
 import com.example.keepit.enums.Language
 import com.example.keepit.fragments.WebViewFragment
 import com.example.keepit.notifications.OngoingMediaNotification
@@ -68,6 +70,15 @@ class MainActivity : AppCompatActivity() {
         //test db:
         runBlocking {
             databaseAccess()
+        }
+
+
+
+        runBlocking {
+            val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "dictentries").build()
+            val dictEntryDao = db.dictEntryDao()
+
+            NotificationReceiver.list = dictEntryDao.getEntriesByLang(Language.DE, Language.AR)
         }
 
 

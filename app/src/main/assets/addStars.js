@@ -59,10 +59,10 @@ for(let entry of entries){
     }
 
     function getInd(){
-        let span = getParentLemmaEntry().querySelector(".ind-pieces")
+        let span = getParentLemmaEntry().querySelector(".ind-pieces .ind")
         if(span == null) return null
 
-        for(let s of span.querySelectorAll(".abbr")) s.remove() //removes hint box //TODO dont remove?
+//        for(let s of span.querySelectorAll(".abbr")) s.remove() //removes hint box //TODO dont remove?
         return span.textContent
     }
 

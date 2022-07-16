@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/webViewFragment">
+    app:startDestination="@id/langenscheidtFragment">
 
     <fragment
         android:id="@+id/settingsFragment"
@@ -15,10 +15,6 @@
         android:name="com.example.keepit.vokab.TabLayoutFragment"
         android:label="fragment_langenscheidt"
         tools:layout="@layout/fragment_tab_layout" />
-    <fragment
-        android:id="@+id/webViewFragment"
-        android:name="com.example.keepit.fragments.WebViewFragment"
-        android:label="WebViewFragment" />
     <fragment
         android:id="@+id/dataBaseFragment"
         android:name="com.example.keepit.fragments.DataBaseFragment"
@@ -41,4 +37,24 @@
         android:id="@+id/redensartenIndexFragment"
         android:name="com.example.keepit.fragments.RedensartenIndexFragment"
         android:label="RedensartenIndexFragment" />
+    <fragment
+        android:id="@+id/yandexViewFragment"
+        android:name="com.example.keepit.fragments.YandexViewFragment"
+        android:label="YandexViewFragment" />
+    <fragment
+        android:id="@+id/arabdictViewFragment"
+        android:name="com.example.keepit.fragments.ArabdictViewFragment"
+        android:label="ArabdictViewFragment" />
+    <fragment
+        android:id="@+id/langenscheidtFragment"
+        android:name="com.example.keepit.fragments.LangenscheidtFragment"
+        android:label="LangenscheidtFragment" />
+    <fragment
+        android:id="@+id/deeplFragment"
+        android:name="com.example.keepit.fragments.DeeplFragment"
+        android:label="DeeplFragment" />
+    <fragment
+        android:id="@+id/leoFragment"
+        android:name="com.example.keepit.fragments.LeoFragment"
+        android:label="LeoFragment" />
 </navigation>

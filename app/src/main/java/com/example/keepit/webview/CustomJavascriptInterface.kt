@@ -17,6 +17,8 @@ import java.util.*
 
 class CustomJavascriptInterface(private val activity: FragmentActivity?, private val webView: WebView, private val injectionObject: InjectionObject) {
 
+
+
     private val gson = Gson()
 
     @JavascriptInterface @Throws(Exception::class)
@@ -63,10 +65,6 @@ class CustomJavascriptInterface(private val activity: FragmentActivity?, private
                 return@runBlocking emptyList();
             }
         }
-    }
-
-    fun me() {
-        webView.loadUrl("javascript: console.log('hey');")
     }
 
     @JavascriptInterface @Throws(Exception::class)

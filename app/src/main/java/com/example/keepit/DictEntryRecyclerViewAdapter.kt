@@ -37,9 +37,9 @@ class DictEntryRecyclerViewAdapter(var context: Context,
     //TODO will I have to distinguish between src and target ind? src and target phon? ...
 
     fun srcTextViewText(item: DictEntry): Spannable {
-        val s = SpannableString(item.sourceWord + " " + (item.ind ?: ""))
+        val s = SpannableString(item.sourceWord + " " + (if (item.ind == "null") "" else item.ind))
 
-        if (item.ind != null) {
+        if (item.ind != "null") {
             s.setSpan(
                 StyleSpan(Typeface.ITALIC),
                 item.sourceWord.length,

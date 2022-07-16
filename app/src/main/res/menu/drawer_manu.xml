@@ -5,20 +5,23 @@
 
     <group>
         <item
-            android:id="@+id/webViewFragment"
+            android:id="@+id/langenscheidtFragment"
             android:icon="@drawable/ic_langenscheidt"
             android:title="Langenscheidt" />
         <item
-            android:id="@+id/tabLayoutFragment"
+            android:id="@+id/yandexViewFragment"
             android:icon="@drawable/ic_yandex"
             android:title="Yandex" />
         <item
+            android:id="@+id/leoFragment"
             android:icon="@drawable/ic_leo"
             android:title="Leo" />
         <item
+            android:id="@+id/arabdictViewFragment"
             android:icon="@drawable/arabdict"
             android:title="arabdict" />
         <item
+            android:id="@+id/deeplFragment"
             android:icon="@drawable/ic_deepl"
             android:title="deepl" />
     </group>
@@ -46,7 +49,7 @@
     <!--        <menu>-->
     <group android:id="@+id/manage_app">
         <item
-            android:id="@+id/testFragment"
+            android:id="@+id/tabLayoutFragment"
             android:icon="@drawable/ic_baseline_forum_24"
             android:title="flash cards" />
         <item

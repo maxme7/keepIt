@@ -7,22 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import com.example.keepit.webview.CustomJavascriptInterface
-import com.example.keepit.webview.CustomWebViewClient
 import com.example.keepit.webview.InjectionObject
 import com.example.keepit.R
 
-private const val defaultUrl: String = "https://de.langenscheidt.com/deutsch-arabisch/gehen"
-//private const val defaultUrl: String = "https://de.langenscheidt.com/deutsch-englisch/bow"
-
-class WebViewFragment : Fragment() {
+open class CustomWebViewFragment(private val defaultUrl: String, private val customWebViewClient: WebViewClient = WebViewClient()) : Fragment() {
     private lateinit var webView: WebView
     private var url: String? = null
     private var scrollY: Int = 0
-
-    fun getWebView(): WebView { //TODO
-        return this.webView
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -30,7 +23,7 @@ class WebViewFragment : Fragment() {
 
         //setup
         webView = fragm.findViewById(R.id.webView) //view binding?
-        webView.webViewClient = CustomWebViewClient()
+        webView.webViewClient = customWebViewClient//CustomWebViewClient()
 
 
         Log.i("WEB", url.toString())
@@ -41,11 +34,11 @@ class WebViewFragment : Fragment() {
         val settings = webView.settings
         settings.javaScriptEnabled = true
         settings.javaScriptCanOpenWindowsAutomatically = false
-        settings.setSupportMultipleWindows(false)
-        settings.allowFileAccess = true
         settings.loadWithOverviewMode = true
-        settings.setSupportZoom(true)
         settings.builtInZoomControls = true
+        settings.setSupportZoom(true)
+        settings.setSupportMultipleWindows(false)
+        settings.allowFileAccess = false
         settings.displayZoomControls = false
 
         webView.isVerticalScrollBarEnabled = false
@@ -57,7 +50,8 @@ class WebViewFragment : Fragment() {
         //https://www.youtube.com/watch?v=9RwJeocTgJg
 
         val injectionObject = InjectionObject()
-        webView.addJavascriptInterface(CustomJavascriptInterface(activity, webView, injectionObject), "android") //TODO companion object in jsInterface?
+        webView.addJavascriptInterface(CustomJavascriptInterface(activity, webView, injectionObject),
+            "android") //TODO companion object in jsInterface?
         //second parameter refers to the global window object which has a method PerformClick() that can be invoked
 
 

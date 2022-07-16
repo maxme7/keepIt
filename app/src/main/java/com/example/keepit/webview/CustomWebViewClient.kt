@@ -23,10 +23,10 @@ class CustomWebViewClient : WebViewClient() {
     }
 
 
-    override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-        Log.i("LOADED", request?.url.toString())
-        return super.shouldOverrideUrlLoading(view, request)
-    }
+//    override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+//        Log.i("LOADED", request?.url.toString())
+//        return super.shouldOverrideUrlLoading(view, request)
+//    }
 
     override fun onPageFinished(view: WebView, url: String) {
         super.onPageFinished(view, url)

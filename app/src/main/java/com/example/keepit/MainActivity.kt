@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.example.keepit.broadcastReceivers.NotificationReceiver
 import com.example.keepit.enums.Language
-import com.example.keepit.fragments.WebViewFragment
+import com.example.keepit.fragments.CustomWebViewFragment
 import com.example.keepit.notifications.OngoingMediaNotification
 import com.example.keepit.room.AppDatabase
 import com.example.keepit.room.DictEntry

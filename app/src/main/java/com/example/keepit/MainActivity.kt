@@ -2,9 +2,8 @@ package com.example.keepit
 
 import android.Manifest.permission.*
 import android.os.Bundle
-import android.provider.BaseColumns
-import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
@@ -16,17 +15,13 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.example.keepit.broadcastReceivers.NotificationReceiver
 import com.example.keepit.enums.Language
-import com.example.keepit.fragments.CustomWebViewFragment
 import com.example.keepit.notifications.OngoingMediaNotification
 import com.example.keepit.room.AppDatabase
-import com.example.keepit.room.DictEntry
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.runBlocking
-import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -187,35 +182,7 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    //https://developer.android.com/training/appbar/actions
-    //TODO back and forward navigation (own action bar for webviews?)
-//    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-//        R.id.bookmarkButton -> {
-////            val s = editText.text.toString()
-//            val s = webView.url.toString()
-//            if (!bookmarks.contains(s)) {
-//                bookmarks.add(s)
-//            }
-//            true
-//        }
-//        R.id.backButton -> {
-//            webView.goBack()
-//            true
-//        }
-//        R.id.forwardButton -> {
-//            webView.goForward()
-//            true
-//        }
-//        R.id.bookarmsButton -> {
-//            showDialog()
-//            true
-//        }
-//        else -> {
-//            // If we got here, the user's action was not recognized.
-//            // Invoke the superclass to handle it.
-//            super.onOptionsItemSelected(item)
-//        }
-//    }
+
 
     //https://protocoderspoint.com/android-alert-dialog-box-with-a-list-of-options/
 //    private fun showDialog() {

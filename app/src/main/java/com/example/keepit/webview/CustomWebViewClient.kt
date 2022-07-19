@@ -5,52 +5,53 @@ import android.webkit.*
 import java.io.IOException
 import java.io.InputStream
 
-class CustomWebViewClient : WebViewClient() {
+class CustomWebViewClient(private var scripts: Array<String> = emptyArray(),
+                          private var includeFilter: Array<String> = arrayOf(""),
+                          private var excludeFilter: Array<String> = emptyArray()) : WebViewClient() {
     var failedLoading = false
 
-    override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
-
-        //Currently only for langenscheidt; filters cookies and ad banner TODO
-        if (request?.url.toString().contains("langenscheidt") || request?.url.toString().contains("cloudfront") || request?.url.toString()
-                .contains("svg")
-        ) {
+    override fun shouldInterceptRequest(webView: WebView?, request: WebResourceRequest?): WebResourceResponse? {
+        // only load resources where the resource url contains any string from the provided filter
+        if (includeFilter.any { request?.url.toString().contains(it) } && excludeFilter.none { request?.url.toString().contains(it) }) {
             Log.i("LOADED", request?.url.toString())
-            return super.shouldInterceptRequest(view, request)
+            return super.shouldInterceptRequest(webView, request)
         } else {
             Log.i("FILTERED", request?.url.toString())
             return WebResourceResponse("text/javascript", "UTF-8", null) //empty web resource response
         }
     }
 
-
 //    override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
 //        Log.i("LOADED", request?.url.toString())
 //        return super.shouldOverrideUrlLoading(view, request)
 //    }
 
-    override fun onPageFinished(view: WebView, url: String) {
-        super.onPageFinished(view, url)
+
+    override fun onPageFinished(webView: WebView, url: String) {
+        super.onPageFinished(webView, url)
 
 //        Toast.makeText(view.context, "شسيب", Toast.LENGTH_LONG).show()
         if (!failedLoading) {
         }
 
-        Log.i("RE", view.progress.toString())
-        if(view.progress < 100) return
+        Log.i("RE", webView.progress.toString())
+        if (webView.progress < 100) return
         //called before progress 100%: https://stackoverflow.com/questions/18282892/android-webview-onpagefinished-called-twice
 
         //apply javascript
         //https://stackoverflow.com/questions/19621427/webview-manipulate-dom-after-webpage-has-been-loaded
 
 
-
         //=> https://developer.android.com/reference/android/webkit/WebView#addJavascriptInterface(java.lang.Object,%20java.lang.String)
         //next reloaded; security implication; injects java object
 
 //        view.loadUrl("javascript: " + fetchAssetFile(view, "addStars.js"))
-        view.evaluateJavascript(fetchAssetFile(view, "playAudioDirectly.js"), null)
-        view.evaluateJavascript(fetchAssetFile(view, "addStars.js"), null)
 
+        executeScripts(webView, scripts)
+    }
+
+    fun executeScripts(webView: WebView, scripts: Array<String>) {
+        scripts.forEach { webView.evaluateJavascript(fetchAssetFile(webView, it), null) }
     }
 
     override fun onReceivedError(

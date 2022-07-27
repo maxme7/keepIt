@@ -1,7 +1,11 @@
 package com.example.keepit.fragments
 
+import com.example.keepit.webview.CustomWebViewClient
 import com.example.keepit.webview.CustomWebViewFragment
 
-private const val defaultUrl: String = "https://www.deepl.com/translator"
+//deepl.com not loading properly in webview
 
-class DeeplFragment : CustomWebViewFragment(defaultUrl)
+private const val defaultUrl: String = "https://www.deepl.com/translator-mobile"
+private val scripts = arrayOf("deepl.js", "deepl_addStars.js")
+
+class DeeplFragment : CustomWebViewFragment(defaultUrl, CustomWebViewClient())

@@ -117,6 +117,7 @@ open class CustomWebViewFragment(private val defaultUrl: String, private val cus
         super.onResume()
 
         //load restored url after state change or default url
+        Log.i("WEB", "defaultURL")
         webView.loadUrl(url ?: defaultUrl)
         webView.scrollTo(0, scrollY)
     }

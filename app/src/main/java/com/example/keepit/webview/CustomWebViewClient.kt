@@ -31,7 +31,7 @@ class CustomWebViewClient(private var scripts: Array<String> = emptyArray(),
         super.onPageFinished(webView, url)
 
 //        Toast.makeText(view.context, "شسيب", Toast.LENGTH_LONG).show()
-        if (!failedLoading) {
+        if (!failedLoading) { //TODO useless
         }
 
         Log.i("RE", webView.progress.toString())

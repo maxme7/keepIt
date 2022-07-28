@@ -1,10 +1,14 @@
 package com.example.keepit
 
 import android.Manifest.permission.*
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
@@ -15,6 +19,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.preference.PreferenceManager
 import androidx.room.Room
 import com.example.keepit.broadcastReceivers.NotificationReceiver
 import com.example.keepit.enums.Language
@@ -38,6 +43,9 @@ class MainActivity : AppCompatActivity() {
     private val bookmarks: MutableList<String> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        setAppTheme()
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -81,6 +89,9 @@ class MainActivity : AppCompatActivity() {
             OngoingMediaNotification.cancelAll(this)
         }
 
+        setupPreferences()
+
+
         //https://stackoverflow.com/questions/33698122/android-change-actionbar-title-text-color
 //        val s = SpannableString(title)
 //        s.setSpan(
@@ -90,6 +101,25 @@ class MainActivity : AppCompatActivity() {
 //            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
 //        )
 //        supportActionBar?.title = s
+    }
+
+    fun setAppTheme() {
+        val themePreference = PreferenceManager.getDefaultSharedPreferences(this).getString("chooseTheme", "light_theme")
+        if ("dark_theme" == themePreference) {
+            setTheme(R.style.Theme_KeepIt_Dark)
+        } else {
+            setTheme(R.style.Theme_KeepIt)
+        }
+    }
+
+    fun setupPreferences() {
+//initial init of variables
+        val preferenceManager = PreferenceManager.getDefaultSharedPreferences(this)
+
+        for (preference in preferenceManager.all) {
+            Log.i("PREF", preference.key.toString())
+            Log.i("PREF", preference.value.toString())
+        }
     }
 
 
@@ -181,7 +211,6 @@ class MainActivity : AppCompatActivity() {
 
         super.onDestroy()
     }
-
 
 
     //https://protocoderspoint.com/android-alert-dialog-box-with-a-list-of-options/

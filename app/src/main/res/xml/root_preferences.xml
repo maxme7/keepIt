@@ -1,40 +1,57 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory app:title="App">
 
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
-
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
+        <ListPreference
+            app:defaultValue="de"
+            app:entries="@array/language_entries"
+            app:entryValues="@array/language_values"
+            app:key="setLanguage"
+            app:title="Language"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
+            app:defaultValue="light_theme"
+            app:entries="@array/theme_entries"
+            app:entryValues="@array/theme_values"
+            app:key="chooseTheme"
+            app:title="Choose App Theme"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="@id/langenscheidtFragment"
+            app:entries="@array/main_fragment_entries"
+            app:entryValues="@array/main_fragment_values"
+            app:key="entryFragment"
+            app:title="Open at Startup"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/sync_header">
+    <PreferenceCategory app:title="Notifications">
 
         <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="Allow Notifications" />
+            android:defaultValue="true"
+            app:key="enableNotifications"
+            app:summaryOff="Flash card notifications disabled"
+            app:summaryOn="Display flash card notifications in status bar"
+            app:title="Enable Notifications" />
 
         <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
+            android:defaultValue="true"
+            app:key="lockScreenVisibility"
+            app:summaryOff="Hide flash card content on lock screen"
+            app:summaryOn="Read and navigate flash cards on lock screen"
+            app:title="Lock Screen Visibility" />
 
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Storage">
+        <Preference
+            android:key="clearDatabase"
+            android:summary="Delete all words that are currently saved"
+            android:title="Clear Database" />
     </PreferenceCategory>
 
 </PreferenceScreen>

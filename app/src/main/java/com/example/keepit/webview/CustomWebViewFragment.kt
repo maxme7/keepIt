@@ -127,8 +127,10 @@ open class CustomWebViewFragment(private val defaultUrl: String, private val cus
 
         //saveState()? https://developer.android.com/reference/android/webkit/WebView#saveState(android.os.Bundle)
 
-        outState.putString("url", webView.url)
-        outState.putInt("scrollY", webView.scrollY) //not perfect, but better. different layouts do not match with scrollY TODO
+        if (::webView.isInitialized) {
+            outState.putInt("scrollY", webView.scrollY) //not perfect, but better. different layouts do not match with scrollY TODO
+            outState.putString("url", webView.url)
+        }
     }
 
     // restored after onStart() and before onResume()

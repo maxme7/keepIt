@@ -23,7 +23,7 @@
             app:defaultValue="@id/langenscheidtFragment"
             app:entries="@array/main_fragment_entries"
             app:entryValues="@array/main_fragment_values"
-            app:key="entryFragment"
+            app:key="startDestination"
             app:title="Open at Startup"
             app:useSimpleSummaryProvider="true" />
 

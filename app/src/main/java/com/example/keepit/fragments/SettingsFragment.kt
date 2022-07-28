@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.navigation.fragment.NavHostFragment
 import androidx.preference.PreferenceFragmentCompat
 import com.example.keepit.R
 import androidx.preference.Preference
@@ -22,7 +23,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val config = requireContext().resources.configuration
 
         findPreference<Preference>("setLanguage")?.onPreferenceChangeListener =
-            Preference.OnPreferenceChangeListener { preference: Preference, any: Any ->
+            Preference.OnPreferenceChangeListener { preference: Preference, newValue: Any ->
                 //code for what you want it to do
                 requireContext().resources.configuration.setLocale(Locale.GERMAN)
 //                Toast.makeText(requireContext(), requireContext().resources.configuration.locales.toString(), Toast.LENGTH_LONG).show()
@@ -30,22 +31,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
 
         findPreference<Preference>("chooseTheme")?.onPreferenceChangeListener =
-            Preference.OnPreferenceChangeListener { preference: Preference, any: Any ->
+            Preference.OnPreferenceChangeListener { preference: Preference, newValue: Any ->
                 requireActivity().recreate() //recreate activity to apply changed theme
                 true
             }
 
-        findPreference<Preference>("entryFragment")?.onPreferenceChangeListener =
-            Preference.OnPreferenceChangeListener { preference: Preference, any: Any ->
-                //code for what you want it to do
-                Toast.makeText(requireContext(), requireContext().resources.configuration.locales.toString(), Toast.LENGTH_LONG).show()
-                requireContext().resources.configuration.setLocale(Locale.GERMAN)
-                Toast.makeText(requireContext(), requireContext().resources.configuration.locales.toString(), Toast.LENGTH_LONG).show()
-                true
-            }
+//        not necessary since startDestination only relevant on start, where the setting is fetched anyways
+//        findPreference<Preference>("startDestination")?.onPreferenceChangeListener =
+//            Preference.OnPreferenceChangeListener { preference: Preference, newValue: Any ->
+////                requireActivity().recreate() //recreate activity to apply changed startDestination
+//                true
+//            }
 
         findPreference<Preference>("enableNotifications")?.onPreferenceChangeListener =
-            Preference.OnPreferenceChangeListener { preference: Preference, any: Any ->
+            Preference.OnPreferenceChangeListener { preference: Preference, newValue: Any ->
                 //code for what you want it to do
                 Toast.makeText(requireContext(), requireContext().resources.configuration.locales.toString(), Toast.LENGTH_LONG).show()
                 requireContext().resources.configuration.setLocale(Locale.GERMAN)
@@ -54,7 +53,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
 
         findPreference<Preference>("lockScreenVisibility")?.onPreferenceChangeListener =
-            Preference.OnPreferenceChangeListener { preference: Preference, any: Any ->
+            Preference.OnPreferenceChangeListener { preference: Preference, newValue: Any ->
                 //code for what you want it to do
                 Toast.makeText(requireContext(), requireContext().resources.configuration.locales.toString(), Toast.LENGTH_LONG).show()
                 requireContext().resources.configuration.setLocale(Locale.GERMAN)

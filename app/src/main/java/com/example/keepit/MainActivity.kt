@@ -14,6 +14,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -144,6 +145,16 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         navController = navHostFragment.navController
+
+        //set nav graph startDestination dynamically
+        //https://medium.com/@anoopg87/set-start-destination-for-navhostfragment-dynamically-b072a29bfe49
+        val graphInflater = navHostFragment.navController.navInflater
+        val navGraph = graphInflater.inflate(R.navigation.nav_graph)
+        val startDestinationPreference = PreferenceManager.getDefaultSharedPreferences(this).getString("startDestination", "langenscheidtFragment")
+        navGraph.setStartDestination(resources.getIdentifier(startDestinationPreference, "id", packageName))
+        navController.graph = navGraph
+
+
         drawerLayoutParent = findViewById(R.id.drawer_layout)
         NavigationUI.setupWithNavController(findViewById<NavigationView>(R.id.navigationView), navController)
 

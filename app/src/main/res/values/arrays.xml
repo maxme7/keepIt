@@ -36,15 +36,15 @@
 
     //TODO check wheather double quotes are part of the value or just semantically indicating a string
     <string-array name="main_fragment_values">
-        <item>"@id/langenscheidtFragment"</item>
-        <item>"@id/yandexViewFragment"</item>
-        <item>"@id/leoFragment"</item>
-        <item>"@id/arabdictViewFragment"</item>
-        <item>"@id/deeplFragment"</item>
-        <item>"@id/dudenFragment"</item>
-        <item>"@id/redensartenIndexFragment"</item>
-        <item>"@id/wiktionaryFragment"</item>
-        <item>"@id/tabLayoutFragment"</item>
-        <item>"@id/manage_app"</item>
+        <item>langenscheidtFragment</item>
+        <item>yandexViewFragment</item>
+        <item>leoFragment</item>
+        <item>arabdictViewFragment</item>
+        <item>deeplFragment</item>
+        <item>dudenFragment</item>
+        <item>redensartenIndexFragment</item>
+        <item>wiktionaryFragment</item>
+        <item>tabLayoutFragment</item>
+        <item>manage_app</item>
     </string-array>
 </resources>

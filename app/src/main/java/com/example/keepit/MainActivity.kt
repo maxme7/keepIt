@@ -1,14 +1,16 @@
 package com.example.keepit
 
 import android.Manifest.permission.*
+import android.app.Application
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
@@ -28,6 +30,7 @@ import com.example.keepit.notifications.OngoingMediaNotification
 import com.example.keepit.room.AppDatabase
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.runBlocking
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -50,10 +53,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //check if permission granted; if permission is requested everytime  => resume; pause; resume sequence occurs
+        if (ActivityCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, arrayOf(READ_EXTERNAL_STORAGE), 1) //TODO update to current permissions
+        }
+
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-
-        ActivityCompat.requestPermissions(this, arrayOf(READ_EXTERNAL_STORAGE), 1) //TODO update to current permissions
 
         drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
 
@@ -90,9 +96,6 @@ class MainActivity : AppCompatActivity() {
             OngoingMediaNotification.cancelAll(this)
         }
 
-        setupPreferences()
-
-
         //https://stackoverflow.com/questions/33698122/android-change-actionbar-title-text-color
 //        val s = SpannableString(title)
 //        s.setSpan(
@@ -110,16 +113,6 @@ class MainActivity : AppCompatActivity() {
             setTheme(R.style.Theme_KeepIt_Dark)
         } else {
             setTheme(R.style.Theme_KeepIt)
-        }
-    }
-
-    fun setupPreferences() {
-//initial init of variables
-        val preferenceManager = PreferenceManager.getDefaultSharedPreferences(this)
-
-        for (preference in preferenceManager.all) {
-            Log.i("PREF", preference.key.toString())
-            Log.i("PREF", preference.value.toString())
         }
     }
 
@@ -198,13 +191,31 @@ class MainActivity : AppCompatActivity() {
 
         // when app is not yet up completely, notifications (in onDestroy) don't get deleted; either pressing home button or task manager too early
         // put notificationSetup() somewhere where it is guaranteed that app will be up completely. (maybe where you select word set
-        OngoingMediaNotification.setup(
-            this) //TODO if statement; only setup, when setting flashcard notifications is true -> probably make a "start button" triggering notifications
+
+        val notificationsEnabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("enableNotifications", true)
+        if (notificationsEnabled) { //TODO can als be disabled on mobile; should be communicated? can I get info if it is disabled?
+            OngoingMediaNotification.setup(this)
+            //TODO if statement; only setup, when setting flashcard notifications is true -> probably make a "start button" triggering notifications
+        }
+
+        //TODO !! if database cleared, problem with notifications
     }
 
+    override fun onStart() {
+        super.onStart()
+    }
+
+    //TODO resume called twice and pause once for some reason
     override fun onResume() {
         super.onResume()
         navController.addOnDestinationChangedListener(destinationChangeListener)
+
+//TODO problem currently only set once. why??
+        val languagePreference = PreferenceManager.getDefaultSharedPreferences(this).getString("setLanguage", "en")
+
+        val locale = Locale(languagePreference)
+        Locale.setDefault(locale) //necessary for RTL configuration change
+        resources.configuration.setLocale(locale)
     }
 
     override fun onSupportNavigateUp(): Boolean {

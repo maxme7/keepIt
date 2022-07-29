@@ -11,13 +11,15 @@
 
 
     <string-array name="language_entries">
-        <item>German</item>
+        <item>Arabic</item>
         <item>English</item>
+        <item>German</item>
     </string-array>
 
     <string-array name="language_values">
-        <item>de</item>
+        <item>ar</item>
         <item>en</item>
+        <item>de</item>
     </string-array>
 
 
@@ -32,12 +34,12 @@
         <item>Wiktionary</item>
         <item>flash cards</item>
         <item>manage database</item>
+        <item>settings</item>
     </string-array>
 
-    //TODO check wheather double quotes are part of the value or just semantically indicating a string
     <string-array name="main_fragment_values">
         <item>langenscheidtFragment</item>
-        <item>yandexViewFragment</item>
+        <item>yandexFragment</item>
         <item>leoFragment</item>
         <item>arabdictViewFragment</item>
         <item>deeplFragment</item>
@@ -45,6 +47,7 @@
         <item>redensartenIndexFragment</item>
         <item>wiktionaryFragment</item>
         <item>tabLayoutFragment</item>
-        <item>manage_app</item>
+        <item>dataBaseFragment</item>
+        <item>settingsFragment</item>
     </string-array>
 </resources>

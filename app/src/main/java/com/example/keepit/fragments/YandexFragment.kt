@@ -8,4 +8,4 @@ private const val defaultUrl: String = "https://translate.yandex.com/?lang=it-en
 //private val requestExcludeFilter = emptyArray<String>()
 private val scripts = arrayOf("yandex.js", "yandex_addStars.js")
 
-class YandexViewFragment :  CustomWebViewFragment(defaultUrl, CustomWebViewClient(scripts))
+class YandexFragment :  CustomWebViewFragment(defaultUrl, CustomWebViewClient(scripts))

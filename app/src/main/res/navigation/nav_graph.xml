@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/leoFragment">
+    app:startDestination="@id/langenscheidtFragment">
 
     <fragment
         android:id="@+id/settingsFragment"
@@ -38,9 +38,9 @@
         android:name="com.example.keepit.fragments.RedensartenIndexFragment"
         android:label="RedensartenIndexFragment" />
     <fragment
-        android:id="@+id/yandexViewFragment"
-        android:name="com.example.keepit.fragments.YandexViewFragment"
-        android:label="YandexViewFragment" />
+        android:id="@+id/yandexFragment"
+        android:name="com.example.keepit.fragments.YandexFragment"
+        android:label="YandexFragment" />
     <fragment
         android:id="@+id/arabdictViewFragment"
         android:name="com.example.keepit.fragments.ArabdictViewFragment"

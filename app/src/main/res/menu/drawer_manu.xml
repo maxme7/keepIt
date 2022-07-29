@@ -9,7 +9,7 @@
             android:icon="@drawable/ic_langenscheidt"
             android:title="Langenscheidt" />
         <item
-            android:id="@+id/yandexViewFragment"
+            android:id="@+id/yandexFragment"
             android:icon="@drawable/ic_yandex"
             android:title="Yandex" />
         <item
@@ -61,7 +61,7 @@
         <item
             android:id="@+id/settingsFragment"
             android:icon="@drawable/ic_baseline_settings_24"
-            android:title="settings" />
+            android:title="@string/Settings" />
     </group>
     <!--        </menu>-->
     <!--    </item>-->

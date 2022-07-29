@@ -11,6 +11,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import androidx.core.app.NotificationCompat.getColor
+import androidx.preference.PreferenceManager
 import com.example.keepit.MainActivity
 import com.example.keepit.R
 import com.example.keepit.broadcastReceivers.NotificationReceiver
@@ -47,9 +48,9 @@ class OngoingMediaNotification {
         fun createChannel(context: Context) {
             val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-            NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW).apply {
+            NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT).apply {
                 description = CHANNEL_DESCRIPTION
-                importance = NotificationManager.IMPORTANCE_UNSPECIFIED
+//                importance = NotificationManager.IMPORTANCE_UNSPECIFIED
                 notificationManager.createNotificationChannel(this)
             }
         }
@@ -98,7 +99,7 @@ class OngoingMediaNotification {
                 .setContentIntent(openActivityPendingIntent)
 
                 .setStyle(Notification.MediaStyle().setShowActionsInCompactView(0, 1)) //media style // indices of actions (max 3) when compact
-                .setVisibility(Notification.VISIBILITY_PUBLIC) //content shown on lockscreen
+                .setVisibility(getVisibility(context)) //content shown on lockscreen
                 .setOngoing(true) //can't be swiped away
 
                 .addAction(R.drawable.ic_outline_done_32, "NEXT", nextPendingIntent)
@@ -107,6 +108,20 @@ class OngoingMediaNotification {
                 .addAction(R.drawable.ic_cancel, "Cancel", cancelPendingIntent) //cancel notification
 
                 .build()
+        }
+
+        private fun getVisibility(context: Context): Int {
+            val visibilityPreference = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("lockScreenVisibility", false)
+            return if (visibilityPreference) {
+                Notification.VISIBILITY_PUBLIC
+            } else {
+                Notification.VISIBILITY_SECRET
+            }
+        }
+
+        fun setVisibility(context: Context) {
+            val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.getNotificationChannel(CHANNEL_ID).lockscreenVisibility = getVisibility(context)
         }
 
         private fun createBroadcastIntend(context: Context, action: NotificationAction): PendingIntent {

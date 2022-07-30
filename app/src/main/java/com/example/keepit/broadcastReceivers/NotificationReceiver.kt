@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import com.example.keepit.enums.NotificationAction
 import com.example.keepit.notifications.OngoingMediaNotification
-import com.example.keepit.room.DictEntry
+import com.example.keepit.room.entities.DictEntry
 
 class NotificationReceiver : BroadcastReceiver() {
 

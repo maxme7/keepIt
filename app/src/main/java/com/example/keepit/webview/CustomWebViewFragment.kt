@@ -9,16 +9,25 @@ import android.view.ViewGroup
 import android.webkit.WebSettings.LOAD_DEFAULT
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import com.example.keepit.R
+import com.example.keepit.enums.Language
 
 
-open class CustomWebViewFragment(private val defaultUrl: String, private val customWebViewClient: WebViewClient = WebViewClient()) : Fragment() {
+open class CustomWebViewFragment(private val defaultUrl: String, private val customWebViewClient: WebViewClient = WebViewClient()) : Fragment(),
+    AdapterView.OnItemSelectedListener {
     private lateinit var webView: WebView
     private var url: String? = null
     private var scrollY: Int = 0
 
     private lateinit var topSheet: View
+    private var spinnerSourceLang: Language = Language.DE
+    private var spinnerTargetLang: Language = Language.AR
+    //TODO make automatically change when search in browser changes
+    //TODO show user when word to save does not fit to selected group (maybe out open topsheet)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -80,6 +89,17 @@ open class CustomWebViewFragment(private val defaultUrl: String, private val cus
 
         topSheet = fragm.findViewById(R.id.topSheet)
         TopSheetBehavior.from(topSheet).state = TopSheetBehavior.STATE_EXPANDED
+
+        val srcSpinner = fragm.findViewById<Spinner>(R.id.sourceLangSpinner)
+        srcSpinner.adapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, Language.values())
+        srcSpinner.setSelection(Language.DE.ordinal) //initial
+        srcSpinner.onItemSelectedListener = this
+
+        val tarSpinner = fragm.findViewById<Spinner>(R.id.targetLangSpinner)
+        tarSpinner.adapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, Language.values())
+        tarSpinner.setSelection(Language.AR.ordinal)
+        tarSpinner.onItemSelectedListener = this
+
 
         return fragm
     }
@@ -150,6 +170,21 @@ open class CustomWebViewFragment(private val defaultUrl: String, private val cus
         url = savedInstanceState?.getString("url")
         scrollY = savedInstanceState?.getInt("scrollY") ?: 0
     }
+
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        when (parent?.id) {
+            R.id.sourceLangSpinner -> spinnerSourceLang = Language.values()[position]
+            R.id.targetLangSpinner -> spinnerTargetLang = Language.values()[position]
+            else -> {}
+        }
+
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        //TODO("Not yet implemented")
+    }
+
 
     //TODO also restore on activity level?? -> problem when switching screen mode
 

@@ -13,7 +13,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.keepit.enums.Language
-import com.example.keepit.room.DictEntry
+import com.example.keepit.room.entities.DictEntry
 
 class DictEntryRecyclerViewAdapter(var context: Context,
                                    val list: List<DictEntry>) : RecyclerView.Adapter<DictEntryRecyclerViewAdapter.EntryViewHolder>() {

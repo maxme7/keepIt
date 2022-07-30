@@ -1,6 +1,5 @@
 package com.example.keepit.webview
 
-import android.app.Activity
 import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
@@ -10,7 +9,7 @@ import androidx.room.Room
 import com.example.keepit.MainActivity
 import com.example.keepit.enums.Language
 import com.example.keepit.room.AppDatabase
-import com.example.keepit.room.DictEntry
+import com.example.keepit.room.entities.DictEntry
 import com.google.gson.Gson
 import kotlinx.coroutines.runBlocking
 import java.util.*

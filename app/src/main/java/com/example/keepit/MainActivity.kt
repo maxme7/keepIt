@@ -25,6 +25,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.preference.PreferenceManager
 import androidx.room.Room
+import androidx.room.migration.AutoMigrationSpec
 import com.example.keepit.broadcastReceivers.NotificationReceiver
 import com.example.keepit.enums.Language
 import com.example.keepit.notifications.OngoingMediaNotification
@@ -86,7 +87,8 @@ class MainActivity : AppCompatActivity() {
 
 
         runBlocking {
-            val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "dictentries").build()
+            //fallbackToDestructiveMigration will clear all data from db on room db version change
+            val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "dictentries").fallbackToDestructiveMigration().build()
             val dictEntryDao = db.dictEntryDao()
 
             NotificationReceiver.list = dictEntryDao.getEntriesByLang(Language.DE, Language.AR)

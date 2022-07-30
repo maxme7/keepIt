@@ -1,4 +1,4 @@
-package com.example.keepit.room
+package com.example.keepit.room.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -6,9 +6,8 @@ import androidx.room.PrimaryKey
 import com.example.keepit.enums.Language
 import java.util.*
 
-@Entity(primaryKeys = ["sourceWord", "targetWord"])
+@Entity
 data class DictEntry(
-//    @PrimaryKey(autoGenerate = true) var id: Int,
 //    @ColumnInfo(name = "customerName") var name: String?,
 //    @ColumnInfo(name = "customerAddress") var address: String?,
 
@@ -24,7 +23,8 @@ data class DictEntry(
     var phon: String?,
     var ind: String?,
 
-    var categories: Array<String>
+    var categories: Array<String>,
+    @PrimaryKey(autoGenerate = true) var id: Long = 0,
 )
 
 // room entities: https://developer.android.com/training/data-storage/room/defining-data

@@ -49,7 +49,7 @@ class CustomJavascriptInterface(private val activity: FragmentActivity?, private
     fun findEntry(sourceLang: String?, targetLang: String?, sourceWord: String?, targetWord: String?, gram: String?, phon: String?,
                   ind: String?): List<DictEntry> {
         return runBlocking {  //TODO Blocking a problem when db gets bigger?
-            val db = Room.databaseBuilder(activity!!.applicationContext, AppDatabase::class.java, "dictentries").build()
+            val db = Room.databaseBuilder(activity!!.applicationContext, AppDatabase::class.java, "db").build()
             val dictEntryDao = db.dictEntryDao()
 
             //TODO bottleneck? blocking...  langenscheidt de en gehen or laufen an example where it takes relatively long
@@ -88,7 +88,7 @@ class CustomJavascriptInterface(private val activity: FragmentActivity?, private
         Log.i("ENTRY", entry.toString())
 
         runBlocking {
-            val db = Room.databaseBuilder(activity!!.applicationContext, AppDatabase::class.java, "dictentries").build()
+            val db = Room.databaseBuilder(activity!!.applicationContext, AppDatabase::class.java, "db").build()
             val dictEntryDao = db.dictEntryDao()
 
             //TODO make sure not inserted twice
@@ -111,7 +111,7 @@ class CustomJavascriptInterface(private val activity: FragmentActivity?, private
                     phon: String?, ind: String?): Boolean {
 
         runBlocking {
-            val db = Room.databaseBuilder(activity!!.applicationContext, AppDatabase::class.java, "dictentries").build()
+            val db = Room.databaseBuilder(activity!!.applicationContext, AppDatabase::class.java, "db").build()
             val dictEntryDao = db.dictEntryDao()
 
             val entries = findEntry(sourceLang, targetLang, sourceWord, targetWord, gram, phon, ind)

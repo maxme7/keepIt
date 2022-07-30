@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
         runBlocking {
             //fallbackToDestructiveMigration will clear all data from db on room db version change
-            val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "dictentries").fallbackToDestructiveMigration().build()
+            val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "db").fallbackToDestructiveMigration().build()
             val dictEntryDao = db.dictEntryDao()
 
             NotificationReceiver.list = dictEntryDao.getEntriesByLang(Language.DE, Language.AR)
@@ -163,7 +163,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private suspend fun databaseAccess() {
-        val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "dictentries").build()
+        val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "db").build()
         val dictEntryDao = db.dictEntryDao()
 
 //        dictEntryDao.deleteAll() //TODO

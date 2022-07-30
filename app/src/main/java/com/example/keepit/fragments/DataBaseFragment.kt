@@ -41,15 +41,20 @@ class DataBaseFragment : Fragment(), AdapterView.OnItemSelectedListener {
         tarSpinner.setSelection(Language.AR.ordinal)
         tarSpinner.onItemSelectedListener = this
 
+        binding.swappButton.setOnClickListener {
+            swappLanguages()
+        }
+
         //listview
-        populateRecyclerView(Language.findByFullName(srcSpinner.selectedItem.toString())!!, Language.findByFullName(tarSpinner.selectedItem.toString())!!)
+        populateRecyclerView(Language.findByFullName(srcSpinner.selectedItem.toString())!!,
+            Language.findByFullName(tarSpinner.selectedItem.toString())!!)
 
         return binding.root
     }
 
     fun populateRecyclerView(srcLang: Language, targLang: Language) {
         runBlocking {
-            val db = Room.databaseBuilder(requireContext().applicationContext, AppDatabase::class.java, "dictentries").build()
+            val db = Room.databaseBuilder(requireContext().applicationContext, AppDatabase::class.java, "db").build()
             val dictEntryDao = db.dictEntryDao()
 
             val adapter = DictEntryRecyclerViewAdapter(requireContext(), dictEntryDao.getEntriesByLang(srcLang, targLang))
@@ -80,6 +85,18 @@ class DataBaseFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
         //TODO("Not yet implemented")
+    }
+
+    fun swappLanguages() {
+        val sourceLang = dataBaseViewModel.getSourceLang()
+        dataBaseViewModel.setSourceLang(dataBaseViewModel.getTargetLang())
+        dataBaseViewModel.setTargetLang(sourceLang)
+
+        binding.sourceLangSpinner.setSelection(Language.values().indexOf(dataBaseViewModel.getSourceLang()))
+        binding.targetLangSpinner.setSelection(Language.values().indexOf(dataBaseViewModel.getTargetLang()))
+
+        populateRecyclerView(dataBaseViewModel.getSourceLang(), dataBaseViewModel.getTargetLang())
+
     }
 
 }

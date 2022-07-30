@@ -7,7 +7,7 @@ import com.example.keepit.enums.Language
 import java.util.*
 
 @Entity(primaryKeys = ["collectionId", "collectionGroupId"])
-data class Collection_CollectionGroup(
+data class CollectionCollectionGroup(
     var collectionId: Long,
     var collectionGroupId: Long,
 )

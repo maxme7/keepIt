@@ -102,7 +102,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             .setMessage("Do you really want to DELETE all the words you saved so far?")
             .setPositiveButton(android.R.string.ok) { dialogInterface: DialogInterface, i: Int ->
                 runBlocking { //TODO blocking? does toast appear after deletion finished?
-                    val db = Room.databaseBuilder(requireContext(), AppDatabase::class.java, "dictentries").build()
+                    val db = Room.databaseBuilder(requireContext(), AppDatabase::class.java, "db").build()
                     val dictEntryDao = db.dictEntryDao()
                     dictEntryDao.deleteAll()
                 }

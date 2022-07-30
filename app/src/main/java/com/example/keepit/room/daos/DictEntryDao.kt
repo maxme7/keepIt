@@ -3,7 +3,6 @@ package com.example.keepit.room.daos
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy.IGNORE
 import androidx.room.Query
 import com.example.keepit.enums.Language
 import com.example.keepit.room.entities.DictEntry
@@ -20,10 +19,10 @@ interface DictEntryDao {
 //    suspend fun getByIds(dictEntryIds: IntArray): List<DictEntry>
 
     @Insert
-    suspend fun insertAll(vararg dictEntry: DictEntry)
+    suspend fun insertAll(vararg dictEntries: DictEntry)
 
     @Delete
-    suspend fun delete(dictEntry: DictEntry)
+    suspend fun delete(dictEntries: DictEntry)
 
     @Query("DELETE FROM dictentry")
     suspend fun deleteAll()

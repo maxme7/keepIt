@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/bookmarkButton"
-        android:icon="@drawable/ic_baseline_star_24"
+        android:id="@+id/selectGroupButton"
+        android:icon="@drawable/ic_folder_icon"
         android:title="Bookmark URL"
         app:showAsAction="always" />
     <item

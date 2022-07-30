@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="boarderSpinner" parent="Widget.AppCompat.Spinner">
+        android:popupElevation="@dimen/cardview_compat_inset_shadow"
+    </style>
+</resources>

@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -209,13 +210,19 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         navController.addOnDestinationChangedListener(destinationChangeListener)
+//
+////TODO problem currently only set once. why??
+        val languagePreferenc = PreferenceManager.getDefaultSharedPreferences(this).getString("setLanguage", "en")
+//
+//        val locale = Locale(languagePreference)
+//        Locale.setDefault(locale) //necessary for RTL configuration change
+//        resources.configuration.setLocale(locale)
 
-//TODO problem currently only set once. why??
-        val languagePreference = PreferenceManager.getDefaultSharedPreferences(this).getString("setLanguage", "en")
 
-        val locale = Locale(languagePreference)
-        Locale.setDefault(locale) //necessary for RTL configuration change
-        resources.configuration.setLocale(locale)
+        val config = resources.configuration
+        config.setLayoutDirection(Locale(languagePreferenc)) //LTR or not
+        resources.updateConfiguration(config, resources.displayMetrics)
+
     }
 
     override fun onSupportNavigateUp(): Boolean {

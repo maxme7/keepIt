@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager2.widget.ViewPager2
 import com.example.keepit.R
-import com.example.keepit.webview.FragmentAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 

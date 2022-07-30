@@ -1,10 +1,11 @@
-package com.example.keepit.webview
+package com.example.keepit.vokab
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.keepit.fragments.SettingsFragment
+import com.example.keepit.fragments.testFragment
 
 class FragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
@@ -12,7 +13,7 @@ class FragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) : 
         val fragment: Fragment
 
         if (position == 0) {
-            fragment = SettingsFragment()
+            fragment = testFragment()
         } else {
             fragment = SettingsFragment()
         }

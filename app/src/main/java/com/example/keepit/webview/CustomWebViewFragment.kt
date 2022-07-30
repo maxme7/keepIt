@@ -2,7 +2,6 @@ package com.example.keepit.webview
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -10,12 +9,16 @@ import android.view.ViewGroup
 import android.webkit.WebSettings.LOAD_DEFAULT
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.fragment.app.Fragment
 import com.example.keepit.R
+
 
 open class CustomWebViewFragment(private val defaultUrl: String, private val customWebViewClient: WebViewClient = WebViewClient()) : Fragment() {
     private lateinit var webView: WebView
     private var url: String? = null
     private var scrollY: Int = 0
+
+    private lateinit var topSheet: View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -26,6 +29,7 @@ open class CustomWebViewFragment(private val defaultUrl: String, private val cus
         webView = fragm.findViewById(R.id.webView) //view binding?
         webView.webViewClient = customWebViewClient//CustomWebViewClient()
 
+        //TODO set fragment title accordingly
 
         Log.i("WEB", url.toString())
 //        webView.loadUrl(url ?: "https://de.langenscheidt.com/deutsch-arabisch/gehen")
@@ -74,6 +78,9 @@ open class CustomWebViewFragment(private val defaultUrl: String, private val cus
 //            true
 //        }
 
+        topSheet = fragm.findViewById(R.id.topSheet)
+        TopSheetBehavior.from(topSheet).state = TopSheetBehavior.STATE_EXPANDED
+
         return fragm
     }
 
@@ -100,10 +107,14 @@ open class CustomWebViewFragment(private val defaultUrl: String, private val cus
             }
             true
         }
-//        R.id.bookarmsButton -> {
-//            showDialog()
-//            true
-//        }
+        R.id.selectGroupButton -> {
+            TopSheetBehavior.from(topSheet).state = if (TopSheetBehavior.from(topSheet).state == TopSheetBehavior.STATE_EXPANDED) {
+                TopSheetBehavior.STATE_COLLAPSED
+            } else {
+                TopSheetBehavior.STATE_EXPANDED
+            }
+            true
+        }
         else -> {
             Log.i("WEB", "option menu item selected");
 

@@ -12,6 +12,9 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+        <item name="topSheetBgColor">@color/white</item>
+        <item name="android:spinnerStyle">@style/boarderSpinner</item>
     </style>
 
     <style name="Theme.KeepIt.Dark" parent="Theme.MaterialComponents.NoActionBar" >
@@ -26,5 +29,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+        <item name="topSheetBgColor">#316893</item>
     </style>
 </resources>

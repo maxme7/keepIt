@@ -39,13 +39,17 @@ class SettingsFragment : PreferenceFragmentCompat() {
             Preference.OnPreferenceChangeListener { preference: Preference, language: Any ->
 
 //                Locale.setDefault(Locale(newValue as String)) //necessary to set again before recreation?
-                requireContext().resources.configuration.setLocale(Locale(language as String))
+//                requireContext().resources.configuration.setLocale(Locale(language as String))
 
 
-//                val config = resources.configuration
-//                config.setLocale(Locale("ar"))
-//                resources.updateConfiguration(config, resources.displayMetrics)
-                requireActivity().recreate()
+                val config = resources.configuration
+                Locale.setDefault(Locale(language as String))
+                config.setLocale(Locale(language as String))
+                config.setLayoutDirection(Locale(language as String)) //LTR or not
+                resources.updateConfiguration(config, resources.displayMetrics)
+                requireActivity().recreate() //TODO jumps to startfragment; not with langenscheidt though
+
+                //TODO does not start with settings language?
 
 //                Toast.makeText(requireContext(), requireContext().resources.configuration.locales.toString(), Toast.LENGTH_LONG).show()
                 true

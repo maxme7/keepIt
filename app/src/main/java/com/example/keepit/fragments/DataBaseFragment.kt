@@ -18,6 +18,7 @@ import com.example.keepit.models.DataBaseViewModel
 import com.example.keepit.BR.dbModel
 import com.example.keepit.DictEntryRecyclerViewAdapter
 import com.example.keepit.room.AppDatabase
+import com.example.keepit.room.getDb
 import kotlinx.coroutines.runBlocking
 
 class DataBaseFragment : Fragment(), AdapterView.OnItemSelectedListener {
@@ -54,8 +55,7 @@ class DataBaseFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     fun populateRecyclerView(srcLang: Language, targLang: Language) {
         runBlocking {
-            val db = Room.databaseBuilder(requireContext().applicationContext, AppDatabase::class.java, "db").build()
-            val dictEntryDao = db.dictEntryDao()
+            val dictEntryDao = getDb(requireContext()).dictEntryDao()
 
             val adapter = DictEntryRecyclerViewAdapter(requireContext(), dictEntryDao.getEntriesByLang(srcLang, targLang))
             binding.listView.adapter = adapter

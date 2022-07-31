@@ -1,21 +1,17 @@
 package com.example.keepit.fragments
 
-import android.app.NotificationManager
-import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.fragment.NavHostFragment
+import androidx.lifecycle.lifecycleScope
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.example.keepit.R
-import androidx.preference.Preference
-import androidx.room.Room
 import com.example.keepit.notifications.OngoingMediaNotification
-import com.example.keepit.room.AppDatabase
-import kotlinx.coroutines.runBlocking
+import com.example.keepit.room.clearDb
+import kotlinx.coroutines.*
 import java.util.*
 
 
@@ -101,17 +97,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
             .setTitle("Clear Database")
             .setMessage("Do you really want to DELETE all the words you saved so far?")
             .setPositiveButton(android.R.string.ok) { dialogInterface: DialogInterface, i: Int ->
-                runBlocking { //TODO blocking? does toast appear after deletion finished?
-                    val db = Room.databaseBuilder(requireContext(), AppDatabase::class.java, "db").build()
-                    val dictEntryDao = db.dictEntryDao()
-                    dictEntryDao.deleteAll()
+                lifecycleScope.launch { //TODO problem if switching to other fragment? should be globalscope + cancel?
+                    clearDb(requireContext())
                 }
-                Toast.makeText(requireContext(), "Database has been cleared", Toast.LENGTH_LONG).show();
+                    .invokeOnCompletion {
+                        Toast.makeText(requireContext(), "Database has been cleared", Toast.LENGTH_LONG).show();
+                    }
             }
             .setNegativeButton(android.R.string.cancel) { dialogInterface: DialogInterface, i: Int ->
                 dialogInterface.cancel()
             }
     }
-
-
 }

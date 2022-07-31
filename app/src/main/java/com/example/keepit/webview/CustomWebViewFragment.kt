@@ -13,12 +13,15 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
 import com.example.keepit.R
 import com.example.keepit.broadcastReceivers.NotificationReceiver
 import com.example.keepit.enums.Language
 import com.example.keepit.room.AppDatabase
 import com.example.keepit.room.entities.Collection
+import com.example.keepit.room.getDb
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 
@@ -184,15 +187,13 @@ open class CustomWebViewFragment(private val defaultUrl: String, private val cus
             else -> {}
         }
 
-        runBlocking {
-            val db = Room.databaseBuilder(requireContext(), AppDatabase::class.java, "db").build()
-            val collectionDao = db.collectionDao()
+        lifecycleScope.launch {
+            val collectionDao = getDb(requireContext()).collectionDao()
 
-            var spinner = requireActivity().findViewById<Spinner>(R.id.groupSpinner)
-            var collections = collectionDao.getCollectionByLang(spinnerSourceLang, spinnerTargetLang).map {  it.name }
+            val spinner = requireActivity().findViewById<Spinner>(R.id.groupSpinner)
+            val collections = collectionDao.getCollectionByLang(spinnerSourceLang, spinnerTargetLang).map { it.name }
             spinner.adapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, collections)
 //            spinner.setSelection(Language.AR.ordinal)
-
         }
     }
 

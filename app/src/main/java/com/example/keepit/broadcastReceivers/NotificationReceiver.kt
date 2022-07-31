@@ -39,6 +39,8 @@ class NotificationReceiver : BroadcastReceiver() {
         }
 
         private fun getSrc(): String {
+            if(list.isEmpty()) return "Collection is Empty"
+
             return if (list[index].ind != "null")
                 list[index].sourceWord + " " + list[index].ind
             else
@@ -46,6 +48,8 @@ class NotificationReceiver : BroadcastReceiver() {
         }
 
         private fun getTarget(): String {
+            if(list.isEmpty()) return "Collection is Empty"
+
             return if (list[index].phon != "null")
                 list[index].targetWord + " " + list[index].phon
             else

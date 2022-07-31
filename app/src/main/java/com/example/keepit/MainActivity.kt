@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
@@ -30,6 +31,7 @@ import com.example.keepit.broadcastReceivers.NotificationReceiver
 import com.example.keepit.enums.Language
 import com.example.keepit.notifications.OngoingMediaNotification
 import com.example.keepit.room.AppDatabase
+import com.example.keepit.room.getDb
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.runBlocking
 import java.util.*
@@ -88,8 +90,7 @@ class MainActivity : AppCompatActivity() {
 
         runBlocking {
             //fallbackToDestructiveMigration will clear all data from db on room db version change
-            val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "db").fallbackToDestructiveMigration().build()
-            val dictEntryDao = db.dictEntryDao()
+            val dictEntryDao = getDb(applicationContext).dictEntryDao()
 
             NotificationReceiver.list = dictEntryDao.getEntriesByLang(Language.DE, Language.AR)
 
@@ -163,8 +164,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private suspend fun databaseAccess() {
-        val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "db").build()
-        val dictEntryDao = db.dictEntryDao()
+        val dictEntryDao = getDb(this).dictEntryDao()
 
 //        dictEntryDao.deleteAll() //TODO
 //        dictEntryDao.insertAll(

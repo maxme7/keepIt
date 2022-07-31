@@ -3,22 +3,33 @@ package com.example.keepit.fragments
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import androidx.appcompat.widget.SwitchCompat
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.example.keepit.DictEntryCollectionRecyclerViewAdapter
+import com.example.keepit.OnItemCheckListener
 import com.example.keepit.R
 import com.example.keepit.databinding.FragmentCategorySortingBinding
 import com.example.keepit.enums.Language
 import com.example.keepit.room.AppDatabase
+import com.example.keepit.room.daos.DictEntryCollectionDao
 import com.example.keepit.room.entities.Collection
+import com.example.keepit.room.entities.CollectionCollectionGroup
+import com.example.keepit.room.entities.DictEntry
+import com.example.keepit.room.entities.DictEntryCollection
+import com.example.keepit.room.getDb
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlin.properties.Delegates
+
 
 class CategorySortingFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
@@ -27,7 +38,11 @@ class CategorySortingFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private var spinnerSourceLang: Language = Language.DE
     private var spinnerTargetLang: Language = Language.AR
-    private var showUnassigned: Boolean = true;
+    private var showUnassigned: Boolean = false
+
+    private var selectedCollectionIndex by Delegates.notNull<Int>()
+    private val currentSelectedItems: ArrayList<DictEntry> = ArrayList()
+    private lateinit var collectionList: List<Collection>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -37,13 +52,17 @@ class CategorySortingFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         val srcSpinner = binding.sourceLangSpinner
         srcSpinner.adapter = ArrayAdapter(view.context, android.R.layout.simple_list_item_1, Language.values())
-        srcSpinner.setSelection(spinnerSourceLang.ordinal) //initial
+        srcSpinner.setSelection(spinnerSourceLang.ordinal, true) //initial
         srcSpinner.onItemSelectedListener = this
 
         val tarSpinner = binding.targetLangSpinner
         tarSpinner.adapter = ArrayAdapter(view.context, android.R.layout.simple_list_item_1, Language.values())
-        tarSpinner.setSelection(spinnerTargetLang.ordinal)
+        tarSpinner.setSelection(spinnerTargetLang.ordinal, true)
         tarSpinner.onItemSelectedListener = this
+
+        val selectSpinner = binding.selectionSpinner
+        selectSpinner.adapter = ArrayAdapter(view.context, android.R.layout.simple_list_item_1, getCollectionNames())
+        selectSpinner.onItemSelectedListener = this
 
         binding.swappButton.setOnClickListener {
             swappLanguages()
@@ -53,7 +72,57 @@ class CategorySortingFragment : Fragment(), AdapterView.OnItemSelectedListener {
             showCreateCategoryDialog()
         }
 
+        binding.createCollectionButton.setOnClickListener {
+            lifecycleScope.launch {
+                val decDao = getDb(requireContext().applicationContext).dictEntryCollectionDao()
+
+                for (item in currentSelectedItems) {
+                    val association = DictEntryCollection(item.id, collectionList[selectedCollectionIndex].id)
+                    decDao.insertAll(association)
+                }
+                for (i in decDao.getAll()) {
+                    Log.i("ROOM", i.toString())
+                }
+            }
+        }
+
+        binding.unassignedSwitch.setOnClickListener {
+            val switch = it as SwitchCompat
+            if (switch.isChecked) {
+                switch.text = "all"
+                showUnassigned = false
+            } else {
+                switch.text = "unassigned"
+                showUnassigned = true
+            }
+        }
+
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        //TODO why the hell is onResume not called when changing back from langenscheidt fragment? and thus updating list
+        populateRecyclerView(spinnerSourceLang, spinnerTargetLang)
+    }
+
+    fun reloadSelectionSpinner(view: View) {
+        binding.selectionSpinner.adapter = ArrayAdapter(view.context, android.R.layout.simple_list_item_1, getCollectionNames())
+    }
+
+    fun getCollections(): List<Collection> {
+        var collections: List<Collection>
+        runBlocking { //TODO how to handle return values from coroutine?
+            val collectionDao = getDb(requireContext().applicationContext).collectionDao()
+            collections = collectionDao.getCollectionByLang(spinnerSourceLang, spinnerTargetLang)
+        }
+        return collections
+    }
+
+    fun getCollectionNames(): List<String> {
+        collectionList = getCollections()
+        return collectionList.map { it.name }
     }
 
     private fun showCreateCategoryDialog() {
@@ -69,14 +138,15 @@ class CategorySortingFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 val collection = Collection(collectionName, spinnerSourceLang, spinnerTargetLang)
 
                 runBlocking {
-                    val db = Room.databaseBuilder(requireContext().applicationContext, AppDatabase::class.java, "db").build()
-
-                    val collectionDao = db.collectionDao()
+                    val collectionDao = getDb(requireContext().applicationContext).collectionDao()
                     collectionDao.insertAll(collection)
 
                     for (v in collectionDao.getAll()) {
                         Log.i("ROOM", "${v.id}  ${v.name}  ${v.sourceLang}  ${v.targetLang}")
                     }
+
+                    reloadSelectionSpinner(requireView())
+                    binding.selectionSpinner.setSelection(binding.selectionSpinner.adapter.count - 1) //select newly created item
                 }
                 //TODO update list spinner
 
@@ -89,32 +159,65 @@ class CategorySortingFragment : Fragment(), AdapterView.OnItemSelectedListener {
         builder.create().show()
     }
 
-    fun populateRecyclerView(srcLang: Language, targLang: Language) {
-        runBlocking {
-            val db = Room.databaseBuilder(requireContext().applicationContext, AppDatabase::class.java, "db").build()
+    class ItemCheckListener(var itemList: ArrayList<DictEntry>) : OnItemCheckListener {
+        override fun onItemCheck(item: DictEntry?) {
+            if (item != null) {
+                itemList.add(item)
+            }
+        }
+
+        override fun onItemUncheck(item: DictEntry?) {
+            itemList.remove(item)
+        }
+    }
+
+    private fun populateRecyclerView(srcLang: Language, targLang: Language) {
+        lifecycleScope.launch {
+            val db = getDb(requireContext().applicationContext)
 
             val adapter = if (showUnassigned) {
                 val collectionDao = db.collectionDao()
                 Log.i("ROOM", collectionDao.getUnassignedDictEntries(srcLang, targLang).toString())
-                DictEntryCollectionRecyclerViewAdapter(requireContext(), collectionDao.getUnassignedDictEntries(srcLang, targLang))
+                Log.i("ROOM", db.dictEntryDao().getAll().toString())
+                Log.i("ROOM", db.dictEntryCollectionDao().getAll().toString())
+                Log.i("ROOM", db.collectionDao().getAll().toString())
+                DictEntryCollectionRecyclerViewAdapter(requireContext(), collectionDao.getUnassignedDictEntries(srcLang, targLang),
+                    ItemCheckListener(currentSelectedItems))
             } else {
                 val dictEntryDao = db.dictEntryDao()
-                Log.i("ROOM",  dictEntryDao.getEntriesByLang(srcLang, targLang).toString())
-                DictEntryCollectionRecyclerViewAdapter(requireContext(), dictEntryDao.getEntriesByLang(srcLang, targLang))
+                Log.i("ROOM", dictEntryDao.getEntriesByLang(srcLang, targLang).toString())
+                DictEntryCollectionRecyclerViewAdapter(requireContext(), dictEntryDao.getEntriesByLang(srcLang, targLang),
+                    ItemCheckListener(currentSelectedItems)
+                )
             }
+
+            currentSelectedItems.clear()
             binding.recyclerView.adapter = adapter
             binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        var langHasChnaged = false
         when (parent?.id) {
-            R.id.sourceLangSpinner -> spinnerSourceLang = Language.values()[position]
-            R.id.targetLangSpinner -> spinnerTargetLang = Language.values()[position]
+            R.id.sourceLangSpinner -> {
+                spinnerSourceLang = Language.values()[position]
+                langHasChnaged = true
+            }
+            R.id.targetLangSpinner -> {
+                spinnerTargetLang = Language.values()[position]
+                langHasChnaged = true
+            }
+            R.id.selectionSpinner -> {
+                selectedCollectionIndex = position
+            }
             else -> {}
         }
 
-        populateRecyclerView(spinnerSourceLang, spinnerTargetLang)
+        if (langHasChnaged) {
+            reloadSelectionSpinner(requireView())
+            populateRecyclerView(spinnerSourceLang, spinnerTargetLang)
+        }
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -126,6 +229,7 @@ class CategorySortingFragment : Fragment(), AdapterView.OnItemSelectedListener {
         binding.sourceLangSpinner.setSelection(Language.values().indexOf(spinnerTargetLang))
         binding.targetLangSpinner.setSelection(Language.values().indexOf(sourceLang))
 
+        reloadSelectionSpinner(requireView())
         populateRecyclerView(spinnerSourceLang, spinnerTargetLang)
     }
 

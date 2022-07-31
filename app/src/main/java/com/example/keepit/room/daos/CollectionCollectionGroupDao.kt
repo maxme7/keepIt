@@ -1,9 +1,6 @@
 package com.example.keepit.room.daos
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.example.keepit.room.entities.CollectionCollectionGroup
 
 @Dao
@@ -12,7 +9,7 @@ interface CollectionCollectionGroupDao {
     @Query("SELECT * FROM collectionCollectionGroup")
     suspend fun getAll(): List<CollectionCollectionGroup>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(vararg collectionCollectionGroup: CollectionCollectionGroup)
 
     @Delete

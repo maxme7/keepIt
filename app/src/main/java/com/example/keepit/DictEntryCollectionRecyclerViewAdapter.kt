@@ -1,40 +1,63 @@
 package com.example.keepit
 
+import android.content.ClipData.Item
 import android.content.Context
-import android.graphics.Typeface
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
-import android.text.style.RelativeSizeSpan
-import android.text.style.StyleSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.keepit.enums.Language
 import com.example.keepit.room.entities.DictEntry
 
+
+class ItemViewHolder(var itemView: View,
+                     var targetTextView: TextView = itemView.findViewById(R.id.targetTextView),
+                     var srcTextView: TextView = itemView.findViewById(R.id.srcTextView),
+                     var checkbox: CheckBox = itemView.findViewById(R.id.checkBox)) : RecyclerView.ViewHolder(itemView) {
+
+    fun setOnClickListener(onClickListener: View.OnClickListener) {
+        itemView.setOnClickListener(onClickListener);
+    }
+}
+
+//from: https://stackoverflow.com/questions/33434626/get-list-of-checked-checkboxes-from-recyclerview-android
+open interface OnItemCheckListener {
+    fun onItemCheck(item: DictEntry?)
+    fun onItemUncheck(item: DictEntry?)
+}
+
 class DictEntryCollectionRecyclerViewAdapter(var context: Context,
-                                             val list: List<DictEntry>) : RecyclerView.Adapter<DictEntryCollectionRecyclerViewAdapter.EntryViewHolder>() {
+                                             val list: List<DictEntry>,
+                                             var onItemCheckListener: OnItemCheckListener) : RecyclerView.Adapter<ItemViewHolder>() {
 
-    class EntryViewHolder(itemView: View,
-                          var targetTextView: TextView = itemView.findViewById(R.id.targetTextView),
-                          var srcTextView: TextView = itemView.findViewById(R.id.srcTextView)) : RecyclerView.ViewHolder(itemView)
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EntryViewHolder {
-        val view: View = LayoutInflater.from(context).inflate(R.layout.dictentry_list_item, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
+        val view: View = LayoutInflater.from(context).inflate(R.layout.checkbox_select_item, parent, false)
         Log.i("POSITION", "here")
-        return EntryViewHolder(view)
+        return ItemViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: EntryViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = list[position]
-        holder.targetTextView.text = item.sourceWord
+        holder.srcTextView.text = item.sourceWord
+        holder.targetTextView.text = item.targetWord
 //        holder.targetTextView.text = targetTextViewText(item)
 //        holder.srcTextView.text = srcTextViewText(item)
+
+        val currentItem: DictEntry = list.get(position)
+
+        holder.setOnClickListener() {
+            holder.checkbox.setChecked(!holder.checkbox.isChecked())
+
+            if (holder.checkbox.isChecked()) {
+                onItemCheckListener.onItemCheck(currentItem)
+            } else {
+                onItemCheckListener.onItemUncheck(currentItem)
+            }
+        }
     }
+
 
     //TODO will I have to distinguish between src and target ind? src and target phon? ...
 

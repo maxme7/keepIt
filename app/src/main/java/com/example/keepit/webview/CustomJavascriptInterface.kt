@@ -10,6 +10,7 @@ import com.example.keepit.MainActivity
 import com.example.keepit.enums.Language
 import com.example.keepit.room.AppDatabase
 import com.example.keepit.room.entities.DictEntry
+import com.example.keepit.room.getDb
 import com.google.gson.Gson
 import kotlinx.coroutines.runBlocking
 import java.util.*
@@ -49,8 +50,7 @@ class CustomJavascriptInterface(private val activity: FragmentActivity?, private
     fun findEntry(sourceLang: String?, targetLang: String?, sourceWord: String?, targetWord: String?, gram: String?, phon: String?,
                   ind: String?): List<DictEntry> {
         return runBlocking {  //TODO Blocking a problem when db gets bigger?
-            val db = Room.databaseBuilder(activity!!.applicationContext, AppDatabase::class.java, "db").build()
-            val dictEntryDao = db.dictEntryDao()
+            val dictEntryDao = getDb(activity!!.applicationContext).dictEntryDao()
 
             //TODO bottleneck? blocking...  langenscheidt de en gehen or laufen an example where it takes relatively long
             if (sourceLang != null && targetLang != null && sourceWord != null && targetWord != null) {
@@ -88,8 +88,7 @@ class CustomJavascriptInterface(private val activity: FragmentActivity?, private
         Log.i("ENTRY", entry.toString())
 
         runBlocking {
-            val db = Room.databaseBuilder(activity!!.applicationContext, AppDatabase::class.java, "db").build()
-            val dictEntryDao = db.dictEntryDao()
+            val dictEntryDao = getDb(activity!!.applicationContext).dictEntryDao()
 
             //TODO make sure not inserted twice
             dictEntryDao.insertAll(entry)
@@ -111,8 +110,7 @@ class CustomJavascriptInterface(private val activity: FragmentActivity?, private
                     phon: String?, ind: String?): Boolean {
 
         runBlocking {
-            val db = Room.databaseBuilder(activity!!.applicationContext, AppDatabase::class.java, "db").build()
-            val dictEntryDao = db.dictEntryDao()
+            val dictEntryDao = getDb(activity!!.applicationContext).dictEntryDao()
 
             val entries = findEntry(sourceLang, targetLang, sourceWord, targetWord, gram, phon, ind)
             if (entries.size > 1) Log.d("JavascriptInterface", "found multiple entries where only one was expected!")

@@ -14,6 +14,7 @@
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/drawable/ic_baseline_screen_rotation_alt_32.xml" value="0.1" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/drawable/ic_baseline_skip_next_32.xml" value="0.1" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/drawable/ic_baseline_star_24.xml" value="0.16" />
+        <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/drawable/ic_block_arrow_right.xml" value="0.1" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/drawable/ic_cancel.xml" value="0.1" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/drawable/ic_deepl.xml" value="0.1" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/drawable/ic_duden.xml" value="0.187" />
@@ -29,9 +30,10 @@
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/drawable/spinner_background.xml" value="0.16" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/drawable/top_sheet_background.xml" value="0.1735" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/layout/activity_main.xml" value="0.12886597938144329" />
+        <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/layout/checkbox_select_item.xml" value="0.2364179037174423" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/layout/dialog_new_category.xml" value="0.13645833333333332" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/layout/dictentry_list_item.xml" value="0.35820894502642775" />
-        <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/layout/fragment_category_sorting.xml" value="0.15052083333333333" />
+        <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/layout/fragment_category_sorting.xml" value="0.25" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/layout/fragment_data_base.xml" value="0.2364179037174423" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/layout/fragment_langenscheidt.xml" value="0.1" />
         <entry key="..\:/Users/Aron/Desktop/AppDev/UE/keepIt/app/src/main/res/layout/fragment_list_dialog.xml" value="0.15052083333333333" />

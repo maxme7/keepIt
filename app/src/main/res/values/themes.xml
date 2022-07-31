@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
 
         <item name="topSheetBgColor">@color/white</item>
-        <item name="android:spinnerStyle">@style/boarderSpinner</item>
+        <item name="android:spinnerStyle">@style/Widget.AppCompat.Spinner.DropDown</item>
     </style>
 
     <style name="Theme.KeepIt.Dark" parent="Theme.MaterialComponents.NoActionBar" >

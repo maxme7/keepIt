@@ -17,9 +17,9 @@
         android:icon="@drawable/ic_baseline_arrow_forward_24"
         android:title="Go Forward"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/bookarmsButton"
-        android:icon="@drawable/ic_baseline_bookmarks_24"
-        android:title="All Bookmarks"
-        app:showAsAction="always" />
+<!--    <item-->
+<!--        android:id="@+id/bookarmsButton"-->
+<!--        android:icon="@drawable/ic_baseline_bookmarks_24"-->
+<!--        android:title="All Bookmarks"-->
+<!--        app:showAsAction="always" />-->
 </menu>

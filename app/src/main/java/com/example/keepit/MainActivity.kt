@@ -38,17 +38,12 @@ import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
-//    private lateinit var button: ImageButton
-//    private lateinit var editText: EditText
-
     private lateinit var navController: NavController
     private lateinit var drawerLayoutParent: DrawerLayout
     private lateinit var appBarConfig: AppBarConfiguration
 
     private lateinit var destinationChangeListener: NavController.OnDestinationChangedListener
     private lateinit var drawer: DrawerLayout
-
-    private val bookmarks: MutableList<String> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -58,8 +53,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         //check if permission granted; if permission is requested everytime  => resume; pause; resume sequence occurs
-        if (ActivityCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, arrayOf(READ_EXTERNAL_STORAGE), 1) //TODO update to current permissions
+        if (ActivityCompat.checkSelfPermission(this, INTERNET) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, arrayOf(INTERNET), 1) //TODO apparently not necessary to grant explicitly by user?
         }
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -100,15 +95,6 @@ class MainActivity : AppCompatActivity() {
             OngoingMediaNotification.cancelAll(this)
         }
 
-        //https://stackoverflow.com/questions/33698122/android-change-actionbar-title-text-color
-//        val s = SpannableString(title)
-//        s.setSpan(
-//            ForegroundColorSpan(resources.getColor(R.color.dark_red)),
-//            0,
-//            title.length,
-//            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-//        )
-//        supportActionBar?.title = s
     }
 
     fun setAppTheme() {
@@ -201,7 +187,6 @@ class MainActivity : AppCompatActivity() {
             //TODO if statement; only setup, when setting flashcard notifications is true -> probably make a "start button" triggering notifications
         }
 
-        //TODO !! if database cleared, problem with notifications
     }
 
     override fun onStart() {

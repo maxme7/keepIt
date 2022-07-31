@@ -12,7 +12,7 @@ interface DictEntryDao {
     @Query("SELECT * FROM dictentry")
     suspend fun getAll(): List<DictEntry>
 
-    @Query("SELECT * FROM dictentry WHERE sourceLang = :sourceLang and targetLang = :targetLang")
+    @Query("SELECT * FROM dictentry WHERE sourceLang = :sourceLang AND targetLang = :targetLang")
     suspend fun getEntriesByLang(sourceLang: Language, targetLang: Language): List<DictEntry>
 
 //    @Query("SELECT * FROM dictentry WHERE cid IN (:dictEntryIds)")
@@ -29,12 +29,12 @@ interface DictEntryDao {
 
     @Query(
         "Select * FROM dictentry WHERE " +
-                "sourceLang = :sourceLang and " +
-                "targetLang = :targetLang and " +
-                "sourceWord = :sourceWord and " +
-                "targetWord = :targetWord and " +
-                "gram = :gram and " +
-                "phon = :phon and " +
+                "sourceLang = :sourceLang AND " +
+                "targetLang = :targetLang AND " +
+                "sourceWord = :sourceWord AND " +
+                "targetWord = :targetWord AND " +
+                "gram = :gram AND " +
+                "phon = :phon AND " +
                 "ind = :ind")
     suspend fun find(
         sourceLang: Language, targetLang: Language, sourceWord: String, targetWord: String, gram: String, phon: String,

@@ -97,12 +97,12 @@ open class CustomWebViewFragment(private val defaultUrl: String, private val cus
 
         val srcSpinner = fragm.findViewById<Spinner>(R.id.sourceLangSpinner)
         srcSpinner.adapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, Language.values())
-        srcSpinner.setSelection(Language.DE.ordinal) //initial
+        srcSpinner.setSelection(spinnerSourceLang.ordinal) //initial
         srcSpinner.onItemSelectedListener = this
 
         val tarSpinner = fragm.findViewById<Spinner>(R.id.targetLangSpinner)
         tarSpinner.adapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, Language.values())
-        tarSpinner.setSelection(Language.AR.ordinal)
+        tarSpinner.setSelection(spinnerTargetLang.ordinal)
         tarSpinner.onItemSelectedListener = this
 
 

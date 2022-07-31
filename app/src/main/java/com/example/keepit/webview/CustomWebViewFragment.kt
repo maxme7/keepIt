@@ -96,7 +96,7 @@ open class CustomWebViewFragment(private val defaultUrl: String, private val cus
 //        }
 
         topSheet = fragm.findViewById(R.id.topSheet)
-        TopSheetBehavior.from(topSheet).state = TopSheetBehavior.STATE_EXPANDED
+        TopSheetBehavior.from(topSheet).state = TopSheetBehavior.STATE_COLLAPSED
 
         val srcSpinner = fragm.findViewById<Spinner>(R.id.sourceLangSpinner)
         srcSpinner.adapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, Language.values())

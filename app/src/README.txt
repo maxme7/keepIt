@@ -11,3 +11,7 @@ Open problems:
 > replace runBlocking blocks so it does not block the main thread
 > switching languages still buggy
 > ui translation
+
+
+NOTE:
+The CustomWebViewFragment serves as class for all specific webviews. An attempt to reduce duplicated code.

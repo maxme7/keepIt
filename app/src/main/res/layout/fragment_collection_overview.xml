@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.CollectionOverviewFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Here an overview over collections and collection groups will be displayed; It should be possible to gain insight in what collections exist and which dictEntries they include; it should also be possible to delete them; the user can select collections and collection groups that will be shown in the FLashCardsManagmentFragment. those will be the collections that will be used to fill the flashcard notifications" />
+
+</FrameLayout>

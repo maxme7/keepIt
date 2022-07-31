@@ -13,16 +13,12 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
 import com.example.keepit.DictEntryCollectionRecyclerViewAdapter
 import com.example.keepit.OnItemCheckListener
 import com.example.keepit.R
 import com.example.keepit.databinding.FragmentCategorySortingBinding
 import com.example.keepit.enums.Language
-import com.example.keepit.room.AppDatabase
-import com.example.keepit.room.daos.DictEntryCollectionDao
 import com.example.keepit.room.entities.Collection
-import com.example.keepit.room.entities.CollectionCollectionGroup
 import com.example.keepit.room.entities.DictEntry
 import com.example.keepit.room.entities.DictEntryCollection
 import com.example.keepit.room.getDb
@@ -31,7 +27,7 @@ import kotlinx.coroutines.runBlocking
 import kotlin.properties.Delegates
 
 
-class CategorySortingFragment : Fragment(), AdapterView.OnItemSelectedListener {
+class CollectionSortingFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private var _binding: FragmentCategorySortingBinding? = null
     private val binding get() = _binding!!
@@ -72,7 +68,7 @@ class CategorySortingFragment : Fragment(), AdapterView.OnItemSelectedListener {
             showCreateCategoryDialog()
         }
 
-        binding.createCollectionButton.setOnClickListener {
+        binding.addToCollectionButton.setOnClickListener {
             lifecycleScope.launch {
                 val decDao = getDb(requireContext().applicationContext).dictEntryCollectionDao()
 
@@ -80,9 +76,9 @@ class CategorySortingFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     val association = DictEntryCollection(item.id, collectionList[selectedCollectionIndex].id)
                     decDao.insertAll(association)
                 }
-                for (i in decDao.getAll()) {
-                    Log.i("ROOM", i.toString())
-                }
+
+                reloadSelectionSpinner(requireView())
+                populateRecyclerView(spinnerSourceLang, spinnerTargetLang)
             }
         }
 
@@ -95,6 +91,9 @@ class CategorySortingFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 switch.text = "unassigned"
                 showUnassigned = true
             }
+
+            reloadSelectionSpinner(requireView())
+            populateRecyclerView(spinnerSourceLang, spinnerTargetLang)
         }
 
         return view

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.FlashCardsManagmentFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="here the selected collections and collection groups should be visible. one can fine tune the selection by temporarily disabling one or several collections (touch); feature to store the current colleciton as a collections gorup should be possible; FINALLY HERE SHOULD BE A TOGGLE BUTTON TO ACTIVATE OR DEACITVATE FLASH CARD NOTIFICATIONS" />
+
+</FrameLayout>

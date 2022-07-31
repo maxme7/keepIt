@@ -5,7 +5,13 @@ Android language learning app
 The app assembles common website (online dictionaries, translators) at one place and makes it possible to utalize lookups for later learning sessions.
 Vocabulary can be saved as it is looked up in the  browser webview. The data is being stored locally in a database (SQLite) and cann be managed in be managed inside the app.
 
+### **# HOW TO START**
+
+Start in the Langenscheidt Fragment. Look up some word and press on the star button if you see one. That should save the word and you can look at it in the *management database* and *flash cards* side drawer section.
+
+
 ### Webview
+
 A Webview is used to display an array of websites. Through Javascript interfaces, it becomes possible to communicate with the running website from the app. In this way JS is executed on top of the websites (adding for example a star img that is used as a toggle button to save and delete words). Data from the website can be retrieved and stored in the database.
 
 ### Notifications

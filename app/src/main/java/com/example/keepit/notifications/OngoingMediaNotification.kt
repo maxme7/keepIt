@@ -48,7 +48,7 @@ class OngoingMediaNotification {
         fun createChannel(context: Context) {
             val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-            NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT).apply {
+            NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW).apply {
                 description = CHANNEL_DESCRIPTION
 //                importance = NotificationManager.IMPORTANCE_UNSPECIFIED
                 notificationManager.createNotificationChannel(this)

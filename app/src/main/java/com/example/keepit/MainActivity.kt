@@ -1,36 +1,24 @@
 package com.example.keepit
 
-import android.Manifest.permission.*
-import android.app.Application
-import android.content.SharedPreferences
+import android.Manifest.permission.INTERNET
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.preference.PreferenceManager
-import androidx.room.Room
-import androidx.room.migration.AutoMigrationSpec
 import com.example.keepit.broadcastReceivers.NotificationReceiver
 import com.example.keepit.enums.Language
 import com.example.keepit.notifications.OngoingMediaNotification
-import com.example.keepit.room.AppDatabase
 import com.example.keepit.room.getDb
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.runBlocking
@@ -98,7 +86,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setAppTheme() {
-        val themePreference = PreferenceManager.getDefaultSharedPreferences(this).getString("chooseTheme", "light_theme")
+        val themePreference = PreferenceManager.getDefaultSharedPreferences(this).getString("chooseTheme", "dark_theme")
         if ("dark_theme" == themePreference) {
             setTheme(R.style.Theme_KeepIt_Dark)
         } else {
@@ -131,11 +119,13 @@ class MainActivity : AppCompatActivity() {
 
         //set nav graph startDestination dynamically
         //https://medium.com/@anoopg87/set-start-destination-for-navhostfragment-dynamically-b072a29bfe49
-        val graphInflater = navHostFragment.navController.navInflater
-        val navGraph = graphInflater.inflate(R.navigation.nav_graph)
         val startDestinationPreference = PreferenceManager.getDefaultSharedPreferences(this).getString("startDestination", "langenscheidtFragment")
-        navGraph.setStartDestination(resources.getIdentifier(startDestinationPreference, "id", packageName))
-        navController.graph = navGraph
+        if (startDestinationPreference != "false") {
+            val graphInflater = navHostFragment.navController.navInflater
+            val navGraph = graphInflater.inflate(R.navigation.nav_graph)
+            navGraph.setStartDestination(resources.getIdentifier(startDestinationPreference, "id", packageName))
+            navController.graph = navGraph
+        }
 
 
         drawerLayoutParent = findViewById(R.id.drawer_layout)
